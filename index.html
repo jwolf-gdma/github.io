@@ -94,9 +94,9 @@
 
                     <div class="controls_flex ui_text">
                         <label for="slider_shape_repeats" class="">Shape Repeats</label>
-                        <input type="range" min="1" max="22" value="1" class="slider" id="slider_shape_repeats">
+                        <input type="range" min="1" max="22" value="7" class="slider" id="slider_shape_repeats">
 
-                        <p id='readout_shape_repeats' class="readout">1</p>
+                        <p id='readout_shape_repeats' class="readout">7</p>
                     </div>
                     <div class="controls_flex center_vertically" style="margin-right: 43px; margin-bottom: 0;">
                         <div class='radio_text'>Spiro Type:</div>
@@ -113,7 +113,7 @@
                     </div>
                     <div class="controls_flex center_vertically" style="margin-right: 43px; margin-bottom: 17px;">
                         <label for="spiro_option" class="">Spiro Movement?</label>
-                        <input type="checkbox" id="spiro_option">
+                        <input type="checkbox" id="spiro_option" checked>
                         <label for="draw_grid" class="">Draw Grid?</label>
                         <input type="checkbox" id="draw_grid">
                     </div>
@@ -174,7 +174,7 @@
                                 <div class="col-1">
                                         <div class="controls_flex_in_col">
                                             <label for="shape2" class="text_color_2">Show Shape 2</label>
-                                            <input type="checkbox" id="shape2">
+                                            <input type="checkbox" id="shape2" checked>
             <!--                                <input type="checkbox" id="shape2">-->
                                         </div>
                                         <div class="controls_flex_in_col">
@@ -183,13 +183,13 @@
                                         </div>
                                     <div class="controls_flex_in_col">
                                         <label for="bilateral_2" class="text_color_2 wrap-non">Bilateral?</label>
-                                        <input type="checkbox" id="bilateral_2">
+                                        <input type="checkbox" id="bilateral_2" checked>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                         <div class="controls_flex_in_col">
                                             <label for="anim2_pt_1" class="text_color_2">Animate Point 1</label>
-                                            <input type="checkbox" id="anim2_pt_1">
+                                            <input type="checkbox" id="anim2_pt_1" checked>
                                         </div>
                                         <div class="controls_flex_in_col">
                                             <label for="anim2_cntrl_1" class="text_color_2">Animate Handle 1</label>
@@ -199,7 +199,7 @@
                                             <label for="anim2_anchor" class="text_color_2">Animate Outer Point</label>
                             <!--                <input type="checkbox" id="anim2" onchange="get_animate_1_params()">-->
                 <!--                            <input type="checkbox" id="anim2_anchor" onchange="report_on_things()">-->
-                                            <input type="checkbox" id="anim2_anchor">
+                                            <input type="checkbox" id="anim2_anchor" checked>
                                         </div>
                                 </div>
                             </div>
@@ -261,7 +261,7 @@
                                 <div class="col-1">
                                         <div class="controls_flex_in_col">
                                             <label for="shape4" class="text_color_4">Show Shape 4</label>
-                                            <input type="checkbox" id="shape4" checked>
+                                            <input type="checkbox" id="shape4">
             <!--                                <input type="checkbox" id="shape3">-->
                                         </div>
                                         <div class="controls_flex_in_col">
@@ -364,7 +364,7 @@
                 </div>
                 <hr>
                 <div class="controls_flex_2">
-                    <input type="checkbox" id="handle_outline_viz" checked>
+                    <input type="checkbox" id="handle_outline_viz">
                     <label for="handle_outline_viz" id="handle_outline_viz_lbl" class="lbl_in_flex_start">Show Handles &amp; Outlines?</label>
                 </div>
             </form>        
