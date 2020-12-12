@@ -1173,6 +1173,8 @@ function pause_toggle(){
 function draw(){
 
     // testing touch event detection. Relies on p5js
+    textSize(32);
+    fill(0, 102, 153);
     let display = touches.length + ' touches';
     text(display, 5, 10);
 
