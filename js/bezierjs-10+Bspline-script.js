@@ -1171,6 +1171,11 @@ function pause_toggle(){
 // y = radius *  sin(angle)
 
 function draw(){
+
+    // testing touch event detection. Relies on p5js
+    let display = touches.length + ' touches';
+    text(display, 5, 10);
+
     r_spiro = parseInt(r_spiro);
     point_on_small_r = parseInt(point_on_small_r);
 
