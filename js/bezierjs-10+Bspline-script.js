@@ -1355,7 +1355,6 @@ function touchEnded() {
     // unselect all points in Shape 2.1
     for (var i = 0; i < bez_elmnts_Shape_2.length; i++) {
         bez_elmnts_Shape_2[i].selected = false;
-        bez_elmnts_Shape_2[i].mouse_over = false;
     }
 
     // unselect all points in Shape 4
