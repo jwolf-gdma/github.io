@@ -1886,12 +1886,12 @@ function draw(){
             background(red_bkgrnd, grn_bkgrnd, blu_bkgrnd);
         }
         // testing touch event detection. Relies on p5js
-        textSize(32);
-        fill(150, 150, 153);
-        noStroke();
-        let display = touches.length + ' touches';
-        text(display, canvas_c_x - 200, -canvas_c_y + 50);
-        if(touches.length > 0){
+        // textSize(32);
+        // fill(150, 150, 153);
+        // noStroke();
+        // let display = touches.length + ' touches';
+        // text(display, canvas_c_x - 200, -canvas_c_y + 50);
+        // if(touches.length > 0){
             // console.log(touches[0].x - canvas_c_x);
         }
     
