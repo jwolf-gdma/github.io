@@ -11,7 +11,12 @@
     <script language="javascript" type="text/javascript" src="js/howler.js"></script>
     
 <!--VERSION 8: Added Laser Light Show ( with music ! )-->
-    
+    <style>
+        body {
+            overflow: hidden;
+            /* i feel guilty for doing this */
+        }
+    </style>
 </head>
 
 <html>
@@ -94,9 +99,9 @@
 
                     <div class="controls_flex ui_text">
                         <label for="slider_shape_repeats" class="">Shape Repeats</label>
-                        <input type="range" min="1" max="22" value="7" class="slider" id="slider_shape_repeats">
+                        <input type="range" min="1" max="22" value="1" class="slider" id="slider_shape_repeats">
 
-                        <p id='readout_shape_repeats' class="readout">7</p>
+                        <p id='readout_shape_repeats' class="readout">1</p>
                     </div>
                     <div class="controls_flex center_vertically" style="margin-right: 43px; margin-bottom: 0;">
                         <div class='radio_text'>Spiro Type:</div>
@@ -145,7 +150,7 @@
                                 <div class="col-2">
                                     <div class="controls_flex_in_col">
                                         <label for="anim0" class="text_color_1">Animate 1st Point</label>
-                                        <input type="checkbox" id="anim0" checked>
+                                        <input type="checkbox" id="anim0">
                         <!--                get_animate_1_params isn't used here, because this point just osciallates along the x axis-->
                                     </div>
                                     <div class="controls_flex_in_col">
@@ -154,7 +159,7 @@
                                     </div>
                                     <div class="controls_flex_in_col">
                                         <label for="anim1" class="text_color_1">Animate Inner Point</label>
-                                        <input type="checkbox" id="anim1" onchange="get_animate_1_params()" checked>
+                                        <input type="checkbox" id="anim1" onchange="get_animate_1_params()">
                         <!--                <input type="checkbox" id="anim1">-->
                                     </div>
                                 </div>
@@ -183,23 +188,23 @@
                                         </div>
                                     <div class="controls_flex_in_col">
                                         <label for="bilateral_2" class="text_color_2 wrap-non">Bilateral?</label>
-                                        <input type="checkbox" id="bilateral_2" checked>
+                                        <input type="checkbox" id="bilateral_2">
                                     </div>
                                 </div>
                                 <div class="col-2">
                                         <div class="controls_flex_in_col">
                                             <label for="anim2_pt_1" class="text_color_2">Animate Point 1</label>
-                                            <input type="checkbox" id="anim2_pt_1" checked>
+                                            <input type="checkbox" id="anim2_pt_1">
                                         </div>
                                         <div class="controls_flex_in_col">
                                             <label for="anim2_cntrl_1" class="text_color_2">Animate Handle 1</label>
-                                            <input type="checkbox" id="anim2_cntrl_1" checked>
+                                            <input type="checkbox" id="anim2_cntrl_1">
                                         </div>
                                         <div class="controls_flex_in_col">
                                             <label for="anim2_anchor" class="text_color_2">Animate Outer Point</label>
                             <!--                <input type="checkbox" id="anim2" onchange="get_animate_1_params()">-->
                 <!--                            <input type="checkbox" id="anim2_anchor" onchange="report_on_things()">-->
-                                            <input type="checkbox" id="anim2_anchor" checked>
+                                            <input type="checkbox" id="anim2_anchor">
                                         </div>
                                 </div>
                             </div>
@@ -364,7 +369,7 @@
                 </div>
                 <hr>
                 <div class="controls_flex_2">
-                    <input type="checkbox" id="handle_outline_viz">
+                    <input type="checkbox" id="handle_outline_viz" checked>
                     <label for="handle_outline_viz" id="handle_outline_viz_lbl" class="lbl_in_flex_start">Show Handles &amp; Outlines?</label>
                 </div>
             </form>        

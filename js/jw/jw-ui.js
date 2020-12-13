@@ -91,7 +91,7 @@ function dothingstonextSibling(evt){
     original_height = parseInt(next_sib.getAttribute('data-jwui-original-height')); // this works
 //    console.log(original_height);
 //    console.log("original_height.typeof = " + typeof original_height);
-    console.log(evt.target.childNodes[0]);
+    // console.log(evt.target.childNodes[0]);
     evt.target.childNodes[0].classList.toggle('arrow-right');
     evt.target.childNodes[0].classList.toggle('arrow-down');
     // no matter how small the incrementer, it goes super fast

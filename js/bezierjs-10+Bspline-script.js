@@ -60,7 +60,9 @@ function preload() {
 }
 
 // BEZIER VARIABLES     
-var bez_elmnts = [];
+var bez_elmnts_Shape_1 = [];
+
+var bez_elmnts_Shape_2 = []; // using an Object for Shape 2 was a nightmare, so, trying to refactor this entire program just so Shape 2 is an Array instead of an Object. Wow, that experiment really bit me in the ass
 
 function set_drawing_status(){
 	if(!drawing_status){
@@ -97,9 +99,9 @@ var grn_1 =   3;  // originally 98
 var blu_1 = 123;  // originally 0  
 
 var color_2_rgb;
-var red_2 =  77;  // originally 186
-var grn_2 = 235;  // originally 0  
-var blu_2 = 255;  // originally 255
+var red_2 = 100;  // originally 77   together = teal
+var grn_2 = 255;  // originally 235  together = teal
+var blu_2 = 100;  // originally 255  together = teal
 
 var color_3_rgb;
 var red_1_square = 241;  // originally 139
@@ -234,6 +236,13 @@ let shape_2_original_points_x_coordinates = [];
 let shape_2_original_points_y_coordinates = [];
 let shape_3_original_points_x_coordinates = [];
 let shape_3_original_points_y_coordinates = [];
+
+let shape_2_1_original_points_x_coordinates = []; // for refactoring Shape 2.1
+let shape_2_1_original_points_y_coordinates = [];
+
+
+
+var default_canvas;
 
 window.onload = function(){
     speed_spiro_normalized = speed_spiro_max - (speed_spiro / 60) + 1;
@@ -677,11 +686,14 @@ var first_pt;
 var tBs2;
 // END    tBs2 x,y values, as percentages of canvas w and h    END
 
+var canvas;
+
 var first_use_of_spiro = true;
 // for p5js
 function setup(){
     
-    var canvas = createCanvas(windowWidth, windowHeight);
+    // var canvas = createCanvas(windowWidth, windowHeight);
+    canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent('sketch-holder');
     background(0, 0, 0);
     canvas_w = windowWidth;
@@ -689,6 +701,25 @@ function setup(){
     canvas_c_x = canvas_w/2;
     canvas_c_y = canvas_h/2;
     
+    default_canvas = document.getElementById("defaultCanvas0");
+
+    // console.log(default_canvas);
+// the following event listeners borrowed from:
+// http://bencentra.com/code/2014/12/05/html5-canvas-touch-events.html
+
+    // Set up touch events for mobile, etc
+    // default_canvas.addEventListener("touchstart", function (e) {
+    //     mousePos = getTouchPos(default_canvas, e);
+    //     var touch = e.touches[0];
+    //     var mouseEvent = new MouseEvent("mousedown", {
+    //     clientX: touch.clientX,
+    //     clientY: touch.clientY
+    //     });
+    //     default_canvas.dispatchEvent(mouseEvent);
+    //     console.log('omg it worked');
+    // }, false);
+
+
 //    R_spiro = (canvas_c_y/2); // EPITROCHOID  no longer, cause now it's based on the point's own radius
 //    r_spiro = (R_spiro/2);
     r_spiro = 250; // EPITROCHOID  radius of rotating circle
@@ -718,30 +749,30 @@ function setup(){
         
         if(i % 3 == 0){
             // THIS RESULTS IN NEGATIVE NUMBERS
-//			bez_elmnts.push(new Bez_point('anchor_'+(i/3+1),j-canvas_c_x,j-canvas_c_y,fill_r,fill_g,fill_b, fill_a));
-			bez_elmnts.push(new Bez_point('anchor_'+(i/3+1),j-canvas_c_x,((j-canvas_c_y)*scaler),red_1,grn_1,blu_1, fill_a));
+//			bez_elmnts_Shape_1.push(new Bez_point('anchor_'+(i/3+1),j-canvas_c_x,j-canvas_c_y,fill_r,fill_g,fill_b, fill_a));
+			bez_elmnts_Shape_1.push(new Bez_point('anchor_'+(i/3+1),j-canvas_c_x,((j-canvas_c_y)*scaler),red_1,grn_1,blu_1, fill_a));
             // THIS RESULTS IN POSITIVE NUMBERS
-//			bez_elmnts.push(new Bez_point('anchor_'+(i/3+1),j,j,fill_r,fill_g,fill_b, fill_a));
+//			bez_elmnts_Shape_1.push(new Bez_point('anchor_'+(i/3+1),j,j,fill_r,fill_g,fill_b, fill_a));
             
         } else {
             // THIS RESULTS IN NEGATIVE NUMBERS
-//			bez_elmnts.push(new Bez_point('control_'+i,j-canvas_c_x,j-canvas_c_y,fill_r,fill_g,fill_b, fill_a));
-			bez_elmnts.push(new Bez_point('control_'+i,j-canvas_c_x,((j-canvas_c_y)*scaler),red_1,grn_1,blu_1, fill_a));
+//			bez_elmnts_Shape_1.push(new Bez_point('control_'+i,j-canvas_c_x,j-canvas_c_y,fill_r,fill_g,fill_b, fill_a));
+			bez_elmnts_Shape_1.push(new Bez_point('control_'+i,j-canvas_c_x,((j-canvas_c_y)*scaler),red_1,grn_1,blu_1, fill_a));
             // THIS RESULTS IN POSITIVE NUMBERS
-//			bez_elmnts.push(new Bez_point('control_'+i,j,j,fill_r,fill_g,fill_b, fill_a));
+//			bez_elmnts_Shape_1.push(new Bez_point('control_'+i,j,j,fill_r,fill_g,fill_b, fill_a));
 		}
 
         // MAKES THE LAST POINT SO THE SHAPE CAN BE CLOSED
         if(i == 6){
             // THIS RESULTS IN NEGATIVE NUMBERS
-//            bez_elmnts.push(new Bez_point('last_'+i,j-250-canvas_c_x,j-100-canvas_c_y,fill_r,fill_g,fill_b, fill_a));
-            bez_elmnts.push(new Bez_point('last_'+i,j-250-canvas_c_x,j-100-canvas_c_y,red_1,grn_1,blu_1, fill_a));
+//            bez_elmnts_Shape_1.push(new Bez_point('last_'+i,j-250-canvas_c_x,j-100-canvas_c_y,fill_r,fill_g,fill_b, fill_a));
+            bez_elmnts_Shape_1.push(new Bez_point('last_'+i,j-250-canvas_c_x,j-100-canvas_c_y,red_1,grn_1,blu_1, fill_a));
             // THIS RESULTS IN POSITIVE NUMBERS
-//            bez_elmnts.push(new Bez_point('last_'+i,j-250,j-100,fill_r,fill_g,fill_b, fill_a));
+//            bez_elmnts_Shape_1.push(new Bez_point('last_'+i,j-250,j-100,fill_r,fill_g,fill_b, fill_a));
             
             // GET STARTING VALUES TO ROTATE THIS POINT
-            x6 = bez_elmnts[6].xpos;
-            y6 = bez_elmnts[6].ypos;
+            x6 = bez_elmnts_Shape_1[6].xpos;
+            y6 = bez_elmnts_Shape_1[6].ypos;
             dx = x6 ** 2;
             dy = y6 ** 2;
             radius_R1 = Math.sqrt(dx + dy);
@@ -751,8 +782,8 @@ function setup(){
         }
         
         if(i == 3){
-            x1st3rd = bez_elmnts[3].xpos;
-            y1st3rd = bez_elmnts[3].ypos;
+            x1st3rd = bez_elmnts_Shape_1[3].xpos;
+            y1st3rd = bez_elmnts_Shape_1[3].ypos;
             dx1st3rd = x1st3rd ** 2;
             dy1st3rd = y1st3rd ** 2;
             radius_1st_3rd = Math.sqrt(dx1st3rd + dy1st3rd);
@@ -762,9 +793,9 @@ function setup(){
     }  // END    CREATE SHAPE 1 for loop   END
 
     // STORE THE X and Y COORDINATES FOR SHAPE 1, SO USER CAN RESET THEM
-    for(i = 0; i < bez_elmnts.length; i += 1){
-        shape_1_original_points_x_coordinates.push(bez_elmnts[i].xpos);
-        shape_1_original_points_y_coordinates.push(bez_elmnts[i].ypos);
+    for(i = 0; i < bez_elmnts_Shape_1.length; i += 1){
+        shape_1_original_points_x_coordinates.push(bez_elmnts_Shape_1[i].xpos);
+        shape_1_original_points_y_coordinates.push(bez_elmnts_Shape_1[i].ypos);
     }
     
     start_angle1 = Math.atan2(y6 - 0, x6 - 0) * 180 / Math.PI; // FOR SHAPE 1
@@ -778,7 +809,7 @@ function setup(){
 
     
     // STORE THE X and Y COORDINATES FOR SHAPE 2, SO USER CAN RESET THEM
-    // do you see how much of a pain in the butt Bezier "segments" are?
+    // do you see how much of a pain in the butt Bezier "segments" are? YES, YES I DO
     shape_2_original_points_x_coordinates.push(0);
     shape_2_original_points_x_coordinates.push(tBs2.cntrl1.xpos);
     shape_2_original_points_x_coordinates.push(tBs2.cntrl2.xpos);
@@ -799,7 +830,26 @@ function setup(){
     radius_R2 = Math.sqrt(tBs2_dx + tBs2_dy);
     start_angle2 = Math.atan2(0 - tBs2_y6, 0 - tBs2_x6) * 180 / Math.PI; // ZERO PLACEMENT MATTERS
     angle_R2 = Math.abs(start_angle2); // LESS JUMPY THIS WAY
+
 // END    CREATE SHAPE 2     END
+
+// CREATE SHAPE 2.1  Uses an array instead of an Object (which provided no benefits I could see, but Javascript is still a mysterious animal to me)
+// STILL USING x,y values, as percentages of canvas w and h
+
+    bez_elmnts_Shape_2.push(new Bez_point("first",20,40,red_2,grn_2,blu_2, fill_a));
+    bez_elmnts_Shape_2.push(new Bez_point("control1",canvas_w * 0.056,canvas_h * 0.106,red_2,grn_2,blu_2, fill_a));
+    bez_elmnts_Shape_2.push(new Bez_point("control2",canvas_w * 0.163,canvas_h * 0.306,red_2,grn_2,blu_2, fill_a));
+    bez_elmnts_Shape_2.push(new Bez_point("anchor1",canvas_w * 0.131,canvas_h * 0.424,red_2,grn_2,blu_2, fill_a));
+    bez_elmnts_Shape_2.push(new Bez_point("last", canvas_w * -0.022, canvas_h * 0.488,red_2,grn_2,blu_2, fill_a));
+
+    // STORE THE X and Y COORDINATES FOR SHAPE 2.1, SO USER CAN RESET THEM
+    for(i = 0; i < bez_elmnts_Shape_2.length; i += 1){
+        shape_2_1_original_points_x_coordinates.push(bez_elmnts_Shape_2[i].xpos);
+        shape_2_1_original_points_y_coordinates.push(bez_elmnts_Shape_2[i].ypos);
+        // console.log('storing xy coordinates for Shape 2_1');
+    }
+
+// END    CREATE SHAPE 2.1     END
     
 // CREATE SHAPE 3 THAT'S 'SQUARISH'
     square_points.push(new Bez_point("square_0",(canvas_c_x/2),(canvas_c_y/2),red_1_square,grn_1_square,blu_1_square, fill_a));
@@ -841,10 +891,10 @@ function setup(){
 
 // FUNCTION TO GET VALUES TO ROTATE A POINT. MIGHT NOT USE THIS FUNCITON
 function get_animate_1_params() {
-//    x6 = bez_elmnts[6].xpos; // calculate correct radius for shape 1 inner point
-//    y6 = bez_elmnts[6].ypos;
-    x6 = bez_elmnts[3].xpos; // doesn't calculate correct radius, even for point at index 3
-    y6 = bez_elmnts[3].ypos;
+//    x6 = bez_elmnts_Shape_1[6].xpos; // calculate correct radius for shape 1 inner point
+//    y6 = bez_elmnts_Shape_1[6].ypos;
+    x6 = bez_elmnts_Shape_1[3].xpos; // doesn't calculate correct radius, even for point at index 3
+    y6 = bez_elmnts_Shape_1[3].ypos;
     dx = x6 ** 2;
     dy = y6 ** 2;
     radius_R1 = Math.sqrt(dx + dy);
@@ -887,30 +937,167 @@ document.getElementById("transparency_range_3").addEventListener("input", set_tr
 document.getElementById("transparency_range_4").addEventListener("input", set_transparency);
 //document.getElementById("transparency_background").addEventListener("input", set_transparency);
 
+function touchStarted(event) {
+    // var fingerX = touches[0].x - canvas_c_x;
+    // var fingerY = touches[0].y - canvas_c_y;
+    var fingerX = touches[0].x;
+    var fingerY = touches[0].y;
+    // console.log(fingerX);
+
+    // check to see which point in Shape 1 was tapped, and set it to selected
+    for (var i = 0; i < bez_elmnts_Shape_1.length; i++) {
+        var bez_elmnts_Shape_1_current = bez_elmnts_Shape_1[i];
+        if (fingerX - canvas_c_x > bez_elmnts_Shape_1_current.xpos - bez_elmnts_Shape_1_current.elmt_size && fingerX - canvas_c_x < bez_elmnts_Shape_1_current.xpos + bez_elmnts_Shape_1_current.elmt_size &&
+            fingerY - canvas_c_y > bez_elmnts_Shape_1_current.ypos - bez_elmnts_Shape_1_current.elmt_size && fingerY - canvas_c_y < bez_elmnts_Shape_1_current.ypos + bez_elmnts_Shape_1_current.elmt_size){
+                console.log(bez_elmnts_Shape_1[i]);
+                bez_elmnts_Shape_1[i].selected = true;
+            }
+        
+        bez_elmnts_Shape_1[i].xoffset = fingerX - bez_elmnts_Shape_1[i].xpos;
+        bez_elmnts_Shape_1[i].yoffset = fingerY - bez_elmnts_Shape_1[i].ypos;
+    }
+
+    // // check to see which point in Shape 2.1 was tapped, and set it to selected. Part of the refactoring of Shape 2.1
+    for (var i = 0; i < bez_elmnts_Shape_2.length; i++) {
+        var bez_elmnts_Shape_2_current = bez_elmnts_Shape_2[i];
+        if (fingerX - canvas_c_x > bez_elmnts_Shape_2_current.xpos - bez_elmnts_Shape_2_current.elmt_size && fingerX - canvas_c_x < bez_elmnts_Shape_2_current.xpos + bez_elmnts_Shape_2_current.elmt_size &&
+            fingerY - canvas_c_y > bez_elmnts_Shape_2_current.ypos - bez_elmnts_Shape_2_current.elmt_size && fingerY - canvas_c_y < bez_elmnts_Shape_2_current.ypos + bez_elmnts_Shape_2_current.elmt_size){
+                bez_elmnts_Shape_2[i].selected = true;
+            }
+        
+        bez_elmnts_Shape_2[i].xoffset = fingerX - bez_elmnts_Shape_2[i].xpos;
+        bez_elmnts_Shape_2[i].yoffset = fingerY - bez_elmnts_Shape_2[i].ypos;
+    }
+    // END OF LOOP HANDLES ALL POINTS IN Shape 2.1. Part of the refactoring of Shape 2.1
+    
+    // // check to see which point in Shape 3 was tapped, and set it to selected
+    for (var i = 0; i < square_points.length; i++) {
+        var square_points_current = square_points[i];
+        if (fingerX - canvas_c_x > square_points_current.xpos - square_points_current.elmt_size && fingerX - canvas_c_x < square_points_current.xpos + square_points_current.elmt_size &&
+            fingerY - canvas_c_y > square_points_current.ypos - square_points_current.elmt_size && fingerY - canvas_c_y < square_points_current.ypos + square_points_current.elmt_size){
+                square_points[i].selected = true;
+            }
+        
+        square_points[i].xoffset = fingerX - square_points[i].xpos;
+        square_points[i].yoffset = fingerY - square_points[i].ypos;
+    }
+    // END OF LOOP HANDLES ALL POINTS IN Shape 3
+
+    // check to see which point in Shape 4 was tapped, and set it to selected
+    for (var i = 0; i < bspline_handles.length; i++) {
+        var bspline_handles_current = bspline_handles[i];
+        if (fingerX - canvas_c_x > bspline_handles_current.xpos - bspline_handles_current.elmt_size && fingerX - canvas_c_x < bspline_handles_current.xpos + bspline_handles_current.elmt_size &&
+            fingerY - canvas_c_y > bspline_handles_current.ypos - bspline_handles_current.elmt_size && fingerY - canvas_c_y < bspline_handles_current.ypos + bspline_handles_current.elmt_size){
+                bspline_handles[i].selected = true;
+            }
+        
+        bspline_handles[i].xoffset = fingerX - bspline_handles[i].xpos;
+        bspline_handles[i].yoffset = fingerY - bspline_handles[i].ypos;
+    }
+    // END OF LOOP HANDLES ALL POINTS IN Shape 4
+  } // END of touchStarted function
+
+
 function mousePressed() {
 
     // THIS FOR LOOP HANDLES ALL POINTS IN Shape 1. MAYBE WE DON'T NEED AN OBJECT CONTAINING SEGMENTS? (like shape 2)
-    for (var i = 0; i < bez_elmnts.length; i++) {
+    for (var i = 0; i < bez_elmnts_Shape_1.length; i++) {
         //checking to see if the mouse is over the 'element' (rendered as a circle) and turning it red if it is
-        if (bez_elmnts[i].mouse_over == true) {
-            bez_elmnts[i].selected = true;
+        if (bez_elmnts_Shape_1[i].mouse_over == true) {
+            bez_elmnts_Shape_1[i].selected = true;
 //            console.log("we just selected");
-//			console.log('element # ' + bez_elmnts[i].name);
+//			console.log('element # ' + bez_elmnts_Shape_1[i].name);
 //            console.log('index # = ' + i);
         } else {
  
-            bez_elmnts[i].selected = false;
+            bez_elmnts_Shape_1[i].selected = false;
         }
         
-        if(bez_elmnts[7].mouse_over == true){
-//            console.log('we are over bez_elmnts[7]');
+        if(bez_elmnts_Shape_1[7].mouse_over == true){
+//            console.log('we are over bez_elmnts_Shape_1[7]');
         }
         
-        bez_elmnts[i].xoffset = mouseX - bez_elmnts[i].xpos;
-        bez_elmnts[i].yoffset = mouseY - bez_elmnts[i].ypos;
+        bez_elmnts_Shape_1[i].xoffset = mouseX - bez_elmnts_Shape_1[i].xpos;
+        bez_elmnts_Shape_1[i].yoffset = mouseY - bez_elmnts_Shape_1[i].ypos;
     }
 //    return false;    COULDN'T USE THIS BECAUSE IT PREVENTED USER INPUT INTO THE NUMBER INPUT FIELD
+// END of LOOP HANDLES ALL POINTS IN Shape 1. 
 
+    // CHECK IF MOUSE IS OVER cntrl1, cntrl2, anchor, or last in tBs2 (Shape 2)
+    // THE PROBLEM WITH an OBJECT CONTAINING segments IS THAT YOU CAN'T EASILY ITERATE THROUGH THEM because it has mixed data types in it (the first one is "name" and the other 3 are Bez_point objects)
+    if (first_pt.mouse_over == true) {
+        first_pt.selected = true;
+    //    console.log("we just selected")
+    //    console.log('first_pt ')
+        } else {
+    
+        first_pt.selected = false;
+        }
+        first_pt.xoffset = mouseX - tBs2.cntrl1.xpos;
+        first_pt.yoffset = mouseY - tBs2.cntrl1.ypos;
+    
+        if (tBs2.cntrl1.mouse_over == true) {
+        tBs2.cntrl1.selected = true;
+    //    console.log("we just selected")
+    //    console.log('tBs2.cntrl1 ')        
+        } else {
+    
+        tBs2.cntrl1.selected = false;
+        }
+        tBs2.cntrl1.xoffset = mouseX - tBs2.cntrl1.xpos;
+        tBs2.cntrl1.yoffset = mouseY - tBs2.cntrl1.ypos;
+    
+        if (tBs2.cntrl2.mouse_over == true) {
+        tBs2.cntrl2.selected = true;
+    //    console.log("we just selected")
+    //    console.log('tBs2.cntrl2 ')
+        } else {
+    
+        tBs2.cntrl2.selected = false;
+        }
+        tBs2.cntrl2.xoffset = mouseX - tBs2.cntrl1.xpos;
+        tBs2.cntrl2.yoffset = mouseY - tBs2.cntrl1.ypos;
+        
+        if (tBs2.anchor.mouse_over == true) {
+        tBs2.anchor.selected = true;
+    //    console.log("we just selected");
+    //    console.log('tBs2.anchor ');
+    //    console.log('mousePressed says anchor.angle = ' + tBs2.anchor.angle);
+        } else {
+    
+        tBs2.anchor.selected = false;
+        }
+        tBs2.anchor.xoffset = mouseX - tBs2.cntrl1.xpos;
+        tBs2.anchor.yoffset = mouseY - tBs2.cntrl1.ypos;
+    
+        if (tBs2.last.mouse_over == true) {
+        tBs2.last.selected = true;
+    //    console.log("we just selected")
+    //    console.log('tBs2.last ')
+    //        console.log( 'x = ' +  tBs2.last.xpos);
+    //        console.log( 'y = ' +  tBs2.last.ypos);
+        } else {
+    
+        tBs2.last.selected = false;
+        }
+        tBs2.last.xoffset = mouseX - tBs2.last.xpos;
+        tBs2.last.yoffset = mouseY - tBs2.last.ypos;
+        // CHECK IF MOUSE IS OVER cntrl1, cntrl2, anchor, or last in tBs2 (Shape 2) - END
+
+    // THIS FOR LOOP HANDLES ALL POINTS IN Shape 2.1. Part of refactoring Shape 2.1
+    for (var i = 0; i < bez_elmnts_Shape_2.length; i++) {
+        //checking to see if the mouse is over the 'element' (rendered as a circle) and turning it red if it is
+        if (bez_elmnts_Shape_2[i].mouse_over == true) {
+            bez_elmnts_Shape_2[i].selected = true;
+        } else {
+ 
+            bez_elmnts_Shape_2[i].selected = false;
+        }
+                
+        bez_elmnts_Shape_2[i].xoffset = mouseX - bez_elmnts_Shape_2[i].xpos;
+        bez_elmnts_Shape_2[i].yoffset = mouseY - bez_elmnts_Shape_2[i].ypos;
+    }
+    
     // THIS FOR LOOP HANDLES ALL POINTS IN Shape 3. MAYBE WE DON'T NEED AN OBJECT CONTAINING SEGMENTS? (like Shape 2)
     for (var i = 0; i < square_points.length; i++) {
         //checking to see if the mouse is over the 'element' (rendered as a circle) and turning it red if it is
@@ -927,7 +1114,7 @@ function mousePressed() {
                 
         square_points[i].xoffset = mouseX - square_points[i].xpos;
         square_points[i].yoffset = mouseY - square_points[i].ypos;
-//        console.log(bez_elmnts[i].selected);
+//        console.log(bez_elmnts_Shape_1[i].selected);
     }
     
     // THIS FOR LOOP HANDLES ALL the HANDLES for Shape 4, which is made up of Bsplines
@@ -942,83 +1129,113 @@ function mousePressed() {
                 
         bspline_handles[i].xoffset = mouseX - bspline_handles[i].xpos; // turning this off doesn't fix it
         bspline_handles[i].yoffset = mouseY - bspline_handles[i].ypos;
-//        console.log(bez_elmnts[i].selected);
+//        console.log(bez_elmnts_Shape_1[i].selected);
     }
-    
-    // TEMPORARY: CHECK IF MOUSE IS OVER cntrl1, cntrl2, anchor, or last in tBs2 (Shape 1)
-    // THE PROBLEM WITH an OBJECT CONTAINING segments IS THAT YOU CAN'T EASILY ITERATE THROUGH THEM because it has mixed data types in it (the first one is "name" and the other 3 are Bez_point objects)
-    if (first_pt.mouse_over == true) {
-    first_pt.selected = true;
-//    console.log("we just selected")
-//    console.log('first_pt ')
-    } else {
-
-    first_pt.selected = false;
-    }
-    first_pt.xoffset = mouseX - tBs2.cntrl1.xpos;
-    first_pt.yoffset = mouseY - tBs2.cntrl1.ypos;
-
-    if (tBs2.cntrl1.mouse_over == true) {
-    tBs2.cntrl1.selected = true;
-//    console.log("we just selected")
-//    console.log('tBs2.cntrl1 ')        
-    } else {
-
-    tBs2.cntrl1.selected = false;
-    }
-    tBs2.cntrl1.xoffset = mouseX - tBs2.cntrl1.xpos;
-    tBs2.cntrl1.yoffset = mouseY - tBs2.cntrl1.ypos;
-
-    if (tBs2.cntrl2.mouse_over == true) {
-    tBs2.cntrl2.selected = true;
-//    console.log("we just selected")
-//    console.log('tBs2.cntrl2 ')
-    } else {
-
-    tBs2.cntrl2.selected = false;
-    }
-    tBs2.cntrl2.xoffset = mouseX - tBs2.cntrl1.xpos;
-    tBs2.cntrl2.yoffset = mouseY - tBs2.cntrl1.ypos;
-    
-    if (tBs2.anchor.mouse_over == true) {
-    tBs2.anchor.selected = true;
-//    console.log("we just selected");
-//    console.log('tBs2.anchor ');
-//    console.log('mousePressed says anchor.angle = ' + tBs2.anchor.angle);
-    } else {
-
-    tBs2.anchor.selected = false;
-    }
-    tBs2.anchor.xoffset = mouseX - tBs2.cntrl1.xpos;
-    tBs2.anchor.yoffset = mouseY - tBs2.cntrl1.ypos;
-
-    if (tBs2.last.mouse_over == true) {
-    tBs2.last.selected = true;
-//    console.log("we just selected")
-//    console.log('tBs2.last ')
-//        console.log( 'x = ' +  tBs2.last.xpos);
-//        console.log( 'y = ' +  tBs2.last.ypos);
-    } else {
-
-    tBs2.last.selected = false;
-    }
-    tBs2.last.xoffset = mouseX - tBs2.last.xpos;
-    tBs2.last.yoffset = mouseY - tBs2.last.ypos;
-    // END - TEMPORARY: CHECK IF MOUSE IS OVER cntrl1, cntrl2, anchor, or last in tBs2 (Shape 1) - END
 }
+
+function touchMoved(){
+    // console.log('touch move detected');
+    // console.log(touches[0].x - canvas_c_x);
+    // this for loop is related to Shape 1
+    for (var i = 0; i < bez_elmnts_Shape_1.length; i++) {
+        if (bez_elmnts_Shape_1[i].selected) {
+            bez_elmnts_Shape_1[i].xpos = touches[0].x - canvas_c_x;
+            bez_elmnts_Shape_1[i].ypos = touches[0].y - canvas_c_y;
+            bez_elmnts_Shape_1[i].update_radius_angle(bez_elmnts_Shape_1[i].xpos,bez_elmnts_Shape_1[i].ypos);
+        }
+    }
+    // END     for loop related to Shape 1     END
+
+    // for Shape 2 (tBs2) may not need if refactoring of Shape 2.1 goes well
+    if(first_pt.selected) {
+        first_pt.xpos = touches[0].x - canvas_c_x;
+        first_pt.ypos = touches[0].y - canvas_c_y;
+        first_pt.update_radius_angle(first_pt.xpos,first_pt.ypos);
+    }
+    
+    if(tBs2.cntrl1.selected) {
+        tBs2.cntrl1.xpos = touches[0].x - canvas_c_x;
+        tBs2.cntrl1.ypos = touches[0].y - canvas_c_y;
+        tBs2.cntrl1.update_radius_angle(tBs2.cntrl1.xpos,tBs2.cntrl1.ypos);
+        
+    }
+    
+    if(tBs2.cntrl2.selected) {
+        tBs2.cntrl2.xpos = touches[0].x - canvas_c_x;
+        tBs2.cntrl2.ypos = touches[0].y - canvas_c_y;
+        tBs2.cntrl2.update_radius_angle(tBs2.cntrl2.xpos,tBs2.cntrl2.ypos);
+    }
+    
+    if(tBs2.anchor.selected) {
+        tBs2.anchor.xpos = touches[0].x - canvas_c_x;
+        tBs2.anchor.ypos = touches[0].y - canvas_c_y;
+        tBs2.anchor.update_radius_angle(tBs2.anchor.xpos,tBs2.anchor.ypos);
+    }
+    
+    if(tBs2.last.selected) {
+        tBs2.last.xpos = touches[0].x - canvas_c_x;
+        tBs2.last.ypos = touches[0].y - canvas_c_y;
+        tBs2.last.update_radius_angle(tBs2.last.xpos,tBs2.last.ypos);
+    }
+    // END: for Shape 2 (tBs2) - END   may not need if refactoring of Shape 2.1 goes well   END
+    
+    // this for loop is related to Shape 2.1 refactoring
+    for (var i = 0; i < bez_elmnts_Shape_2.length; i++) {
+        if (bez_elmnts_Shape_2[i].selected) {
+            bez_elmnts_Shape_2[i].xpos = touches[0].x - canvas_c_x;
+            bez_elmnts_Shape_2[i].ypos = touches[0].y - canvas_c_y;
+            bez_elmnts_Shape_2[i].update_radius_angle(bez_elmnts_Shape_2[i].xpos,bez_elmnts_Shape_2[i].ypos);
+        }
+    }
+    // END     for loop related to Shape 2.1 refactoring     END    
+    
+    // this for loop is related to Shape 3
+    for (var i = 0; i < square_points.length; i++) {
+        if (square_points[i].selected) {
+            square_points[i].xpos = touches[0].x - canvas_c_x;
+            square_points[i].ypos = touches[0].y - canvas_c_y;
+            square_points[i].update_radius_angle(square_points[i].xpos,square_points[i].ypos);
+        }
+    }
+    // END     for loop related to Shape 3     END    
+    
+    // this for loop is related to the HANDLES Shape 4
+    for (var i = 0; i < bspline_handles.length; i++) {
+        if (bspline_handles[i].selected) {
+            bspline_handles[i].xpos = touches[0].x - canvas_c_x;
+            bspline_handles[i].ypos = touches[0].y - canvas_c_y;
+            bspline_handles[i].update_radius_angle(bspline_handles[i].xpos,bspline_handles[i].ypos);
+
+            bs_o_p[i].x = touches[0].x - canvas_c_x;
+            bs_o_p[i].y = touches[0].y - canvas_c_y;
+            
+//            calculate_bspline_points();   // no need here; the draw loop continuously calls this function
+            // but what if loop_status = false?
+//            if(!loop_status){
+//                console.log('loop_status is false, calling calculate_bspline_points')
+                calculate_bspline_radii(); // this fixes the jumping spiro problem
+                calculate_bspline_points();
+                calculate_bspline_angle_incrementers(); // 
+                
+//            }
+        }
+    }
+    // END     for loop related to Shape 4     END        
+}
+// END    of touchMoved function    END
 
 function mouseDragged() {
     // this for loop is related to Shape 1
-    for (var i = 0; i < bez_elmnts.length; i++) {
-        if (bez_elmnts[i].selected) {
-            bez_elmnts[i].xpos = mouseX - canvas_c_x;
-            bez_elmnts[i].ypos = mouseY - canvas_c_y;
-            bez_elmnts[i].update_radius_angle(bez_elmnts[i].xpos,bez_elmnts[i].ypos);
+    for (var i = 0; i < bez_elmnts_Shape_1.length; i++) {
+        if (bez_elmnts_Shape_1[i].selected) {
+            bez_elmnts_Shape_1[i].xpos = mouseX - canvas_c_x;
+            bez_elmnts_Shape_1[i].ypos = mouseY - canvas_c_y;
+            bez_elmnts_Shape_1[i].update_radius_angle(bez_elmnts_Shape_1[i].xpos,bez_elmnts_Shape_1[i].ypos);
         }
     }
     // END     for loop related to Shape 1     END
     
-    // for Shape 2 (tBs2)
+    // for Shape 2 (tBs2) which may not be need if refactoring of Shape 2.1 goes well
     if(first_pt.selected) {
         first_pt.xpos = mouseX - canvas_c_x;
         first_pt.ypos = mouseY - canvas_c_y;
@@ -1061,6 +1278,16 @@ function mouseDragged() {
     }
     // END     for loop related to Shape 3     END    
     
+    // this for loop is related to Shape 2.1 part of refactoring Shape 2.1
+    for (var i = 0; i < bez_elmnts_Shape_2.length; i++) {
+        if (bez_elmnts_Shape_2[i].selected) {
+            bez_elmnts_Shape_2[i].xpos = mouseX - canvas_c_x;
+            bez_elmnts_Shape_2[i].ypos = mouseY - canvas_c_y;
+            bez_elmnts_Shape_2[i].update_radius_angle(bez_elmnts_Shape_2[i].xpos,bez_elmnts_Shape_2[i].ypos);
+        }
+    }
+    // END     for loop related to Shape 2.1     END    
+    
     // this for loop is related to the HANDLES Shape 4
     for (var i = 0; i < bspline_handles.length; i++) {
         if (bspline_handles[i].selected) {
@@ -1084,14 +1311,52 @@ function mouseDragged() {
     }
     // END     for loop related to Shape 4     END    
 }
-
-function mouseReleased() {
-    for (var i = 0; i < bez_elmnts.length; i++) {
-        bez_elmnts[i].selected = false;
+function touchEnded() {
+    // unselect all points in Shape 1
+    for (var i = 0; i < bez_elmnts_Shape_1.length; i++) {
+        bez_elmnts_Shape_1[i].selected = false;
     }
+
+    //  unselect all points in SHAPE 2, which, if Shape 2.1 refactor goes well, is not needed
+    first_pt.selected = false;
+    first_pt.mouse_over = false;
+    tBs2.cntrl1.selected = false;
+    tBs2.cntrl1.mouse_over = false;
+    tBs2.cntrl2.selected = false;
+    tBs2.cntrl2.mouse_over = false;
+    tBs2.anchor.selected = false;
+    tBs2.anchor.mouse_over = false;
+    radius_R2 = tBs2.anchor.radius; // BUT... NO LONGER USING radius_R2
+    angle_R2 = tBs2.anchor.angle + k_rotations - (incrementer_base / incrementer1); // BUT... NO LONGER USING angle_R2
+    
+    tBs2.last.selected = false;
+    tBs2.last.mouse_over = false;
+    // END    unselect all points in SHAPE 2, which, if Shape 2.1 refactor goes well, is not needed   END
+
+    // unselect all points in Shape 3
     for (var i = 0; i < square_points.length; i++) {
         square_points[i].selected = false;
     }
+
+    // unselect all points in Shape 2.1
+    for (var i = 0; i < bez_elmnts_Shape_2.length; i++) {
+        bez_elmnts_Shape_2[i].selected = false;
+    }
+
+    // unselect all points in Shape 4
+    for (var i = 0; i < bspline_handles.length; i++) {
+        bspline_handles[i].selected = false;
+    }
+}
+// END   of touchended function   END
+
+function mouseReleased() {
+    // deslected points in Shape 1
+    for (var i = 0; i < bez_elmnts_Shape_1.length; i++) {
+        bez_elmnts_Shape_1[i].selected = false;
+    }
+
+    // related to Shape 2, which, if refactoring of Shape 2.1 goes well, may not be needed
     first_pt.selected = false;
     tBs2.cntrl1.selected = false;
     tBs2.cntrl2.selected = false;
@@ -1100,7 +1365,19 @@ function mouseReleased() {
     angle_R2 = tBs2.anchor.angle + k_rotations - (incrementer_base / incrementer1); // BUT... NO LONGER USING angle_R2
     
     tBs2.last.selected = false;
+    // END   related to Shape 2, which, if refactoring of Shape 2.1 goes well, may not be needed  END
     
+    // deslected points in Shape 2.1
+    for (var i = 0; i < bez_elmnts_Shape_2.length; i++) {
+        bez_elmnts_Shape_2[i].selected = false;
+    }
+
+    // deslected points in Shape 3
+    for (var i = 0; i < square_points.length; i++) {
+        square_points[i].selected = false;
+    }
+
+    // deselect HANDLES for Shape 4
     for (var i = 0; i < bspline_handles.length; i++) {
         bspline_handles[i].selected = false;
     }
@@ -1172,12 +1449,6 @@ function pause_toggle(){
 
 function draw(){
 
-    // testing touch event detection. Relies on p5js
-    textSize(32);
-    fill(0, 102, 153);
-    let display = touches.length + ' touches';
-    text(display, 5, 10);
-
     r_spiro = parseInt(r_spiro);
     point_on_small_r = parseInt(point_on_small_r);
 
@@ -1240,7 +1511,7 @@ function draw(){
     
     grid_a = Math.PI/half_grid_unit;
 
-//    bez_elmnts[0].xpos = bez_elmnts[0].xpos + Math.cos(osscilator_1); // oscillates from current position
+//    bez_elmnts_Shape_1[0].xpos = bez_elmnts_Shape_1[0].xpos + Math.cos(osscilator_1); // oscillates from current position
 
     if(need_anim1_params){
 //        console.log('inside draw(), need_anim1_params was true, so I got them')
@@ -1256,136 +1527,227 @@ function draw(){
     if(animating0 && loop_status){ // Shape 1 first point animation
 
         if(osscilator_1 == 0){
-            startx0_0 = bez_elmnts[0].xpos;
+            startx0_0 = bez_elmnts_Shape_1[0].xpos;
         }        
         
         if(spiro_option){
             if(epitro_radio){
                 // NOW LET'S TRY IT WITH A FUNCTION
-//                [bez_elmnts[0].xpos, bez_elmnts[0].ypos] = epiTrochoid(bez_elmnts[0].radius);
+//                [bez_elmnts_Shape_1[0].xpos, bez_elmnts_Shape_1[0].ypos] = epiTrochoid(bez_elmnts_Shape_1[0].radius);
                 // OMFG IT WORKED AND THIS IS THE FIRST TIME I'VE USED ES6 ('destructured array')
                 // the function idea was lovely, but multiple points were calling the same function, and it sped up the spiro too much. Each point needs its own calculations (I think).
-                bez_elmnts[0].xpos = (bez_elmnts[0].radius + r_spiro) * Math.cos(theta_1_1) - (point_on_small_r * Math.cos(((bez_elmnts[0].radius + r_spiro)/r_spiro) * theta_1_1));
-                bez_elmnts[0].ypos = (bez_elmnts[0].radius + r_spiro) * Math.sin(theta_1_1) - (point_on_small_r * Math.sin(((bez_elmnts[0].radius + r_spiro)/r_spiro) * theta_1_1));
+                bez_elmnts_Shape_1[0].xpos = (bez_elmnts_Shape_1[0].radius + r_spiro) * Math.cos(theta_1_1) - (point_on_small_r * Math.cos(((bez_elmnts_Shape_1[0].radius + r_spiro)/r_spiro) * theta_1_1));
+                bez_elmnts_Shape_1[0].ypos = (bez_elmnts_Shape_1[0].radius + r_spiro) * Math.sin(theta_1_1) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_1[0].radius + r_spiro)/r_spiro) * theta_1_1));
                 theta_1_1 += (2*Math.PI)/speed_spiro;
             } else {
                 // hypotrochoid
-                bez_elmnts[0].xpos = (bez_elmnts[0].radius - r_spiro) * Math.cos(theta_1_1) + (point_on_small_r * Math.cos(((bez_elmnts[0].radius - r_spiro)/r_spiro) * theta_1_1));
-                bez_elmnts[0].ypos = (bez_elmnts[0].radius - r_spiro) * Math.sin(theta_1_1) - (point_on_small_r * Math.sin(((bez_elmnts[0].radius - r_spiro)/r_spiro) * theta_1_1));
+                bez_elmnts_Shape_1[0].xpos = (bez_elmnts_Shape_1[0].radius - r_spiro) * Math.cos(theta_1_1) + (point_on_small_r * Math.cos(((bez_elmnts_Shape_1[0].radius - r_spiro)/r_spiro) * theta_1_1));
+                bez_elmnts_Shape_1[0].ypos = (bez_elmnts_Shape_1[0].radius - r_spiro) * Math.sin(theta_1_1) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_1[0].radius - r_spiro)/r_spiro) * theta_1_1));
                 theta_1_1 += (2*Math.PI)/speed_spiro;
             }
         } else {
             // ***************************
             // "NORMAL" animation equation
-            bez_elmnts[0].xpos = startx0_0 * Math.cos(osscilator_1); // IT WORKS!
+            bez_elmnts_Shape_1[0].xpos = startx0_0 * Math.cos(osscilator_1); // IT WORKS!
             // ***************************
         }
         osscilator_1 += ((2 * Math.PI) / (incrementer_base / incrementer1) );
     } else {
-        startx0_0 = bez_elmnts[0].xpos;
+        startx0_0 = bez_elmnts_Shape_1[0].xpos;
         osscilator_1 = 0;
     } //  END  Shape 1 first point animation  END
 
     if(animating_1st_obj_3rd_index && loop_status){ // Shape 1 midpoint
         
-        bez_elmnts[3].xpos = bez_elmnts[3].radius * Math.cos(bez_elmnts[3].angle); // based on self updating
-        bez_elmnts[3].ypos = bez_elmnts[3].radius * Math.sin(bez_elmnts[3].angle); // 
-        bez_elmnts[3].angle -= ((2 * Math.PI) / (incrementer_base / incrementer2)); //
+        bez_elmnts_Shape_1[3].xpos = bez_elmnts_Shape_1[3].radius * Math.cos(bez_elmnts_Shape_1[3].angle); // based on self updating
+        bez_elmnts_Shape_1[3].ypos = bez_elmnts_Shape_1[3].radius * Math.sin(bez_elmnts_Shape_1[3].angle); // 
+        bez_elmnts_Shape_1[3].angle -= ((2 * Math.PI) / (incrementer_base / incrementer2)); //
     } //  END  shape 1 midpoint animation  END
     
     if(animating1 && loop_status){ // Shape 1 inner point
 
-        bez_elmnts[6].xpos = bez_elmnts[6].radius * Math.cos(bez_elmnts[6].angle); // based on self updating
-        bez_elmnts[6].ypos = bez_elmnts[6].radius * Math.sin(bez_elmnts[6].angle); // 
-        bez_elmnts[6].angle += ((2 * Math.PI) / (incrementer_base / incrementer1)); // based on self updating
+        bez_elmnts_Shape_1[6].xpos = bez_elmnts_Shape_1[6].radius * Math.cos(bez_elmnts_Shape_1[6].angle); // based on self updating
+        bez_elmnts_Shape_1[6].ypos = bez_elmnts_Shape_1[6].radius * Math.sin(bez_elmnts_Shape_1[6].angle); // 
+        bez_elmnts_Shape_1[6].angle += ((2 * Math.PI) / (incrementer_base / incrementer1)); // based on self updating
     } //  END  Shape 1 inner point animation  END
     
+    // Animating some points on Shape 2, which, if refactor of Shape 2.1 goes well, won't be needed
     // animating2_pt_1 IS THE FIRST POINT ON Shape 2, called 'Point 1' in the UI
+//     if(animating2_pt_1 && loop_status){
+//         first_pt.angle += ((2 * Math.PI) / (incrementer_base / incrementer1)); // when radius & angle are retrieved from the object
+        
+//         if(spiro_option){
+//             if(epitro_radio){
+//                 first_pt.xpos = (first_pt.radius + r_spiro) * Math.cos(delta_2_1) - (point_on_small_r * Math.cos(((first_pt.radius + r_spiro)/r_spiro) * delta_2_1));
+//                 first_pt.ypos = (first_pt.radius + r_spiro) * Math.sin(delta_2_1) - (point_on_small_r * Math.sin(((first_pt.radius + r_spiro)/r_spiro) * delta_2_1));
+//                 delta_2_1 += (2*Math.PI)/speed_spiro; // +=, for clockwise direction
+//             } else {
+//                 // hypotrochoid
+//                 first_pt.xpos = (first_pt.radius - r_spiro) * Math.cos(delta_2_1) + (point_on_small_r * Math.cos(((first_pt.radius - r_spiro)/r_spiro) * delta_2_1));
+//                 first_pt.ypos = (first_pt.radius - r_spiro) * Math.sin(delta_2_1) - (point_on_small_r * Math.sin(((first_pt.radius - r_spiro)/r_spiro) * delta_2_1));
+//                 delta_2_1 += (2*Math.PI)/speed_spiro; // +=, for clockwise direction
+//             }
+//         } else {
+//             // ***************************
+//             // "NORMAL" animation equation
+//             first_pt['xpos'] = first_pt.radius * Math.cos(first_pt.angle); // when radius & angle are retrieved from the object
+//             first_pt['ypos'] = first_pt.radius * Math.sin(first_pt.angle);
+//             // ***************************
+//         }
+                
+//     }  // END     if(animating2_first_pt && loop_status)     END
+    
+//     // animating2_cntrl_1 IS THE FIRST CONTROL POINT ON Shape 2, called 'Handle 1' in the UI
+//     if(animating2_cntrl_1 && loop_status){
+//         tBs2.cntrl1.angle += ((2 * Math.PI) / (incrementer_base / incrementer1)); // when radius & angle are retrieved from the object
+        
+//         if(spiro_option){
+//             if(epitro_radio){
+//                 tBs2.cntrl1.xpos = (tBs2.cntrl1.radius + r_spiro) * Math.cos(gamma_2_1) - (point_on_small_r * Math.cos(((tBs2.cntrl1.radius + r_spiro)/r_spiro) * gamma_2_1));
+//                 tBs2.cntrl1.ypos = (tBs2.cntrl1.radius + r_spiro) * Math.sin(gamma_2_1) - (point_on_small_r * Math.sin(((tBs2.cntrl1.radius + r_spiro)/r_spiro) * gamma_2_1));
+//                 gamma_2_1 -= (2*Math.PI)/speed_spiro; // -=, for counter clockwise direction
+//             } else {
+//                 // hypotrochoid function call goes here
+// //                [square_points[0].xpos, square_points[0].ypos] = hypoTrochoid(square_points[0].radius);
+//                 tBs2.cntrl1.xpos = (tBs2.cntrl1.radius - r_spiro) * Math.cos(gamma_2_1) + (point_on_small_r * Math.cos(((tBs2.cntrl1.radius - r_spiro)/r_spiro) * gamma_2_1));
+//                 tBs2.cntrl1.ypos = (tBs2.cntrl1.radius - r_spiro) * Math.sin(gamma_2_1) - (point_on_small_r * Math.sin(((tBs2.cntrl1.radius - r_spiro)/r_spiro) * gamma_2_1));
+//                 gamma_2_1 -= (2*Math.PI)/speed_spiro; // -=, for counter clockwise direction
+//             }
+//         } else {
+//             // ***************************
+//             // "NORMAL" animation equation
+//             tBs2.cntrl1['xpos'] = tBs2.cntrl1.radius * Math.cos(tBs2.cntrl1.angle); // when radius & angle are retrieved from the object
+//             tBs2.cntrl1['ypos'] = tBs2.cntrl1.radius * Math.sin(tBs2.cntrl1.angle); // 
+//             // ***************************
+//         }
+                
+//     }  // END     if(animating2_cntrl_1 && loop_status)     END
+    
+//     // animating2_anchor IS THE OUTER MOST POINT on Shape 2
+//     if(animating2_anchor && loop_status){
+//         if(anim2_anchor_loop_count == 0){
+// //            console.log('anim2_anchor loop started');
+// //            console.log('anchor.angle = ' + tBs2.anchor.angle);
+//             anim2_anchor_loop_count = 1;
+//         }
+// //        tBs2.anchor['xpos'] = radius_R2 * Math.cos(angle_R2); // when radius & angle are calculated ahead of time
+// //        tBs2.anchor['ypos'] = radius_R2 * Math.sin(angle_R2); // tried to use get_animate_1_params to update, but the x & y coordinates always jumped
+//     tBs2.anchor.angle -= ((2 * Math.PI) / (incrementer_base / incrementer2)); // when radius & angle are retrieved from the object
+                
+//         if(spiro_option){
+//             if(epitro_radio){
+//                 tBs2.anchor.xpos = (tBs2.anchor.radius + r_spiro) * Math.cos(theta_2_2) - (point_on_small_r * Math.cos(((tBs2.anchor.radius + r_spiro)/r_spiro) * theta_2_2));
+//                 tBs2.anchor.ypos = (tBs2.anchor.radius + r_spiro) * Math.sin(theta_2_2) - (point_on_small_r * Math.sin(((tBs2.anchor.radius + r_spiro)/r_spiro) * theta_2_2));
+//                 theta_2_2 += (2*Math.PI)/speed_spiro;
+//             } else {
+//                 tBs2.anchor.xpos = (tBs2.anchor.radius - r_spiro) * Math.cos(theta_2_2) + (point_on_small_r * Math.cos(((tBs2.anchor.radius - r_spiro)/r_spiro) * theta_2_2));
+//                 tBs2.anchor.ypos = (tBs2.anchor.radius - r_spiro) * Math.sin(theta_2_2) - (point_on_small_r * Math.sin(((tBs2.anchor.radius - r_spiro)/r_spiro) * theta_2_2));
+//                 theta_2_2 += (2*Math.PI)/speed_spiro;
+//             }
+//         } else {
+//             // ***************************
+//             // "NORMAL" animation equation
+//             tBs2.anchor['xpos'] = tBs2.anchor.radius * Math.cos(tBs2.anchor.angle); // when radius & angle are retrieved from the object
+//             tBs2.anchor['ypos'] = tBs2.anchor.radius * Math.sin(tBs2.anchor.angle); // 
+//             // ***************************
+//         }
+                
+//         if(anim2_anchor_loop_count == 1){
+// //            console.log('anim2_anchor loop went once');
+// //            console.log('now anchor.angle = ' + tBs2.anchor.angle);
+//             anim2_anchor_loop_count = 2;
+//         }
+//     }  // END     if(animating2_anchor && loop_status)     END
+    //   END   Animating some points on Shape 2, which, if refactor of Shape 2.1 goes well, won't be needed
+
+    // **************************
+    // **  Refactor Shape 2.1  **
+    // **************************
+    // animating2_pt_1 IS THE FIRST POINT ON Shape 2.1, called 'Point 1' in the UI
     if(animating2_pt_1 && loop_status){
-        first_pt.angle += ((2 * Math.PI) / (incrementer_base / incrementer1)); // when radius & angle are retrieved from the object
+        bez_elmnts_Shape_2[0].angle += ((2 * Math.PI) / (incrementer_base / incrementer1)); // when radius & angle are retrieved from the object
         
         if(spiro_option){
             if(epitro_radio){
-                first_pt.xpos = (first_pt.radius + r_spiro) * Math.cos(delta_2_1) - (point_on_small_r * Math.cos(((first_pt.radius + r_spiro)/r_spiro) * delta_2_1));
-                first_pt.ypos = (first_pt.radius + r_spiro) * Math.sin(delta_2_1) - (point_on_small_r * Math.sin(((first_pt.radius + r_spiro)/r_spiro) * delta_2_1));
+                bez_elmnts_Shape_2[0].xpos = (bez_elmnts_Shape_2[0].radius + r_spiro) * Math.cos(delta_2_1) - (point_on_small_r * Math.cos(((bez_elmnts_Shape_2[0].radius + r_spiro)/r_spiro) * delta_2_1));
+                bez_elmnts_Shape_2[0].ypos = (bez_elmnts_Shape_2[0].radius + r_spiro) * Math.sin(delta_2_1) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_2[0].radius + r_spiro)/r_spiro) * delta_2_1));
                 delta_2_1 += (2*Math.PI)/speed_spiro; // +=, for clockwise direction
             } else {
                 // hypotrochoid
-                first_pt.xpos = (first_pt.radius - r_spiro) * Math.cos(delta_2_1) + (point_on_small_r * Math.cos(((first_pt.radius - r_spiro)/r_spiro) * delta_2_1));
-                first_pt.ypos = (first_pt.radius - r_spiro) * Math.sin(delta_2_1) - (point_on_small_r * Math.sin(((first_pt.radius - r_spiro)/r_spiro) * delta_2_1));
+                bez_elmnts_Shape_2[0].xpos = (bez_elmnts_Shape_2[0].radius - r_spiro) * Math.cos(delta_2_1) + (point_on_small_r * Math.cos(((bez_elmnts_Shape_2[0].radius - r_spiro)/r_spiro) * delta_2_1));
+                bez_elmnts_Shape_2[0].ypos = (bez_elmnts_Shape_2[0].radius - r_spiro) * Math.sin(delta_2_1) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_2[0].radius - r_spiro)/r_spiro) * delta_2_1));
                 delta_2_1 += (2*Math.PI)/speed_spiro; // +=, for clockwise direction
             }
         } else {
             // ***************************
             // "NORMAL" animation equation
-            first_pt['xpos'] = first_pt.radius * Math.cos(first_pt.angle); // when radius & angle are retrieved from the object
-            first_pt['ypos'] = first_pt.radius * Math.sin(first_pt.angle);
+            bez_elmnts_Shape_2[0]['xpos'] = bez_elmnts_Shape_2[0].radius * Math.cos(bez_elmnts_Shape_2[0].angle); // when radius & angle are retrieved from the object
+            bez_elmnts_Shape_2[0]['ypos'] = bez_elmnts_Shape_2[0].radius * Math.sin(bez_elmnts_Shape_2[0].angle);
             // ***************************
         }
                 
     }  // END     if(animating2_first_pt && loop_status)     END
     
-    // animating2_cntrl_1 IS THE FIRST CONTROL POINT ON Shape 2, called 'Handle 1' in the UI
+    // animating2_cntrl_1 IS THE FIRST CONTROL POINT ON Shape 2.1, called 'Handle 1' in the UI
     if(animating2_cntrl_1 && loop_status){
-        tBs2.cntrl1.angle += ((2 * Math.PI) / (incrementer_base / incrementer1)); // when radius & angle are retrieved from the object
+        bez_elmnts_Shape_2[1].angle += ((2 * Math.PI) / (incrementer_base / incrementer1)); // when radius & angle are retrieved from the object
         
         if(spiro_option){
             if(epitro_radio){
-                tBs2.cntrl1.xpos = (tBs2.cntrl1.radius + r_spiro) * Math.cos(gamma_2_1) - (point_on_small_r * Math.cos(((tBs2.cntrl1.radius + r_spiro)/r_spiro) * gamma_2_1));
-                tBs2.cntrl1.ypos = (tBs2.cntrl1.radius + r_spiro) * Math.sin(gamma_2_1) - (point_on_small_r * Math.sin(((tBs2.cntrl1.radius + r_spiro)/r_spiro) * gamma_2_1));
+                bez_elmnts_Shape_2[1].xpos = (bez_elmnts_Shape_2[1].radius + r_spiro) * Math.cos(gamma_2_1) - (point_on_small_r * Math.cos(((bez_elmnts_Shape_2[1].radius + r_spiro)/r_spiro) * gamma_2_1));
+                bez_elmnts_Shape_2[1].ypos = (bez_elmnts_Shape_2[1].radius + r_spiro) * Math.sin(gamma_2_1) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_2[1].radius + r_spiro)/r_spiro) * gamma_2_1));
                 gamma_2_1 -= (2*Math.PI)/speed_spiro; // -=, for counter clockwise direction
             } else {
                 // hypotrochoid function call goes here
 //                [square_points[0].xpos, square_points[0].ypos] = hypoTrochoid(square_points[0].radius);
-                tBs2.cntrl1.xpos = (tBs2.cntrl1.radius - r_spiro) * Math.cos(gamma_2_1) + (point_on_small_r * Math.cos(((tBs2.cntrl1.radius - r_spiro)/r_spiro) * gamma_2_1));
-                tBs2.cntrl1.ypos = (tBs2.cntrl1.radius - r_spiro) * Math.sin(gamma_2_1) - (point_on_small_r * Math.sin(((tBs2.cntrl1.radius - r_spiro)/r_spiro) * gamma_2_1));
+                bez_elmnts_Shape_2[1].xpos = (bez_elmnts_Shape_2[1].radius - r_spiro) * Math.cos(gamma_2_1) + (point_on_small_r * Math.cos(((bez_elmnts_Shape_2[1].radius - r_spiro)/r_spiro) * gamma_2_1));
+                bez_elmnts_Shape_2[1].ypos = (bez_elmnts_Shape_2[1].radius - r_spiro) * Math.sin(gamma_2_1) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_2[1].radius - r_spiro)/r_spiro) * gamma_2_1));
                 gamma_2_1 -= (2*Math.PI)/speed_spiro; // -=, for counter clockwise direction
             }
         } else {
             // ***************************
             // "NORMAL" animation equation
-            tBs2.cntrl1['xpos'] = tBs2.cntrl1.radius * Math.cos(tBs2.cntrl1.angle); // when radius & angle are retrieved from the object
-            tBs2.cntrl1['ypos'] = tBs2.cntrl1.radius * Math.sin(tBs2.cntrl1.angle); // 
+            bez_elmnts_Shape_2[1]['xpos'] = bez_elmnts_Shape_2[1].radius * Math.cos(bez_elmnts_Shape_2[1].angle); // when radius & angle are retrieved from the object
+            bez_elmnts_Shape_2[1]['ypos'] = bez_elmnts_Shape_2[1].radius * Math.sin(bez_elmnts_Shape_2[1].angle); // 
             // ***************************
         }
                 
     }  // END     if(animating2_cntrl_1 && loop_status)     END
     
-    // animating2_anchor IS THE OUTER MOST POINT on Shape 2
+    // animating2_anchor IS THE OUTER MOST POINT on Shape 2.1
     if(animating2_anchor && loop_status){
         if(anim2_anchor_loop_count == 0){
-//            console.log('anim2_anchor loop started');
-//            console.log('anchor.angle = ' + tBs2.anchor.angle);
             anim2_anchor_loop_count = 1;
         }
-//        tBs2.anchor['xpos'] = radius_R2 * Math.cos(angle_R2); // when radius & angle are calculated ahead of time
-//        tBs2.anchor['ypos'] = radius_R2 * Math.sin(angle_R2); // tried to use get_animate_1_params to update, but the x & y coordinates always jumped
-    tBs2.anchor.angle -= ((2 * Math.PI) / (incrementer_base / incrementer2)); // when radius & angle are retrieved from the object
+    bez_elmnts_Shape_2[4].angle -= ((2 * Math.PI) / (incrementer_base / incrementer2)); // when radius & angle are retrieved from the object
                 
         if(spiro_option){
             if(epitro_radio){
-                tBs2.anchor.xpos = (tBs2.anchor.radius + r_spiro) * Math.cos(theta_2_2) - (point_on_small_r * Math.cos(((tBs2.anchor.radius + r_spiro)/r_spiro) * theta_2_2));
-                tBs2.anchor.ypos = (tBs2.anchor.radius + r_spiro) * Math.sin(theta_2_2) - (point_on_small_r * Math.sin(((tBs2.anchor.radius + r_spiro)/r_spiro) * theta_2_2));
+                bez_elmnts_Shape_2[4].xpos = (bez_elmnts_Shape_2[4].radius + r_spiro) * Math.cos(theta_2_2) - (point_on_small_r * Math.cos(((bez_elmnts_Shape_2[4].radius + r_spiro)/r_spiro) * theta_2_2));
+                bez_elmnts_Shape_2[4].ypos = (bez_elmnts_Shape_2[4].radius + r_spiro) * Math.sin(theta_2_2) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_2[4].radius + r_spiro)/r_spiro) * theta_2_2));
                 theta_2_2 += (2*Math.PI)/speed_spiro;
             } else {
-                tBs2.anchor.xpos = (tBs2.anchor.radius - r_spiro) * Math.cos(theta_2_2) + (point_on_small_r * Math.cos(((tBs2.anchor.radius - r_spiro)/r_spiro) * theta_2_2));
-                tBs2.anchor.ypos = (tBs2.anchor.radius - r_spiro) * Math.sin(theta_2_2) - (point_on_small_r * Math.sin(((tBs2.anchor.radius - r_spiro)/r_spiro) * theta_2_2));
+                bez_elmnts_Shape_2[4].xpos = (bez_elmnts_Shape_2[4].radius - r_spiro) * Math.cos(theta_2_2) + (point_on_small_r * Math.cos(((bez_elmnts_Shape_2[4].radius - r_spiro)/r_spiro) * theta_2_2));
+                bez_elmnts_Shape_2[4].ypos = (bez_elmnts_Shape_2[4].radius - r_spiro) * Math.sin(theta_2_2) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_2[4].radius - r_spiro)/r_spiro) * theta_2_2));
                 theta_2_2 += (2*Math.PI)/speed_spiro;
             }
         } else {
             // ***************************
             // "NORMAL" animation equation
-            tBs2.anchor['xpos'] = tBs2.anchor.radius * Math.cos(tBs2.anchor.angle); // when radius & angle are retrieved from the object
-            tBs2.anchor['ypos'] = tBs2.anchor.radius * Math.sin(tBs2.anchor.angle); // 
+            bez_elmnts_Shape_2[4]['xpos'] = bez_elmnts_Shape_2[4].radius * Math.cos(bez_elmnts_Shape_2[4].angle); // when radius & angle are retrieved from the object
+            bez_elmnts_Shape_2[4]['ypos'] = bez_elmnts_Shape_2[4].radius * Math.sin(bez_elmnts_Shape_2[4].angle); // 
             // ***************************
         }
                 
         if(anim2_anchor_loop_count == 1){
 //            console.log('anim2_anchor loop went once');
-//            console.log('now anchor.angle = ' + tBs2.anchor.angle);
+//            console.log('now anchor.angle = ' + bez_elmnts_Shape_2[4].angle);
             anim2_anchor_loop_count = 2;
         }
     }  // END     if(animating2_anchor && loop_status)     END
+    // ********************************
+    // **  END   Refactor Shape 2.1  **
+    // ********************************
 
     if(animating3_0 && loop_status){ // Shape 3, 1st point
 
@@ -1499,8 +1861,8 @@ function draw(){
     // END      HYPNOTIC ROTATATION     END
 
 // This is the Main Drawing Code
-// TELEPORT        
-        k_repeats = document.getElementById('slider_shape_repeats').value;
+
+    k_repeats = document.getElementById('slider_shape_repeats').value;
         
         if(laser_light_show){
 //            background(0,0,0,15); // forces background to be solid black, cause that's best for a laser light show!
@@ -1509,7 +1871,17 @@ function draw(){
         } else {
             background(red_bkgrnd, grn_bkgrnd, blu_bkgrnd);
         }
-        
+        // testing touch event detection. Relies on p5js
+        textSize(32);
+        fill(150, 150, 153);
+        noStroke();
+        let display = touches.length + ' touches';
+        text(display, canvas_c_x - 200, -canvas_c_y + 50);
+        if(touches.length > 0){
+            // console.log(touches[0].x - canvas_c_x);
+        }
+    
+    
     if(draw_grid){
         
         // ORIGIN_TEST
@@ -1597,26 +1969,26 @@ function draw(){
 
                 // DRAWS Shape 1
                 beginShape();
-                vertex(bez_elmnts[0].xpos,bez_elmnts[0].ypos);
-                bezierVertex(bez_elmnts[1].xpos,bez_elmnts[1].ypos,bez_elmnts[2].xpos,bez_elmnts[2].ypos,bez_elmnts[3].xpos,bez_elmnts[3].ypos);	bezierVertex(bez_elmnts[4].xpos,bez_elmnts[4].ypos,bez_elmnts[5].xpos,bez_elmnts[5].ypos,bez_elmnts[6].xpos,bez_elmnts[6].ypos);  
-                quadraticVertex(bez_elmnts[6].xpos,bez_elmnts[6].ypos,bez_elmnts[7].xpos,bez_elmnts[7].ypos,bez_elmnts[0].xpos,bez_elmnts[0].ypos);
+                vertex(bez_elmnts_Shape_1[0].xpos,bez_elmnts_Shape_1[0].ypos);
+                bezierVertex(bez_elmnts_Shape_1[1].xpos,bez_elmnts_Shape_1[1].ypos,bez_elmnts_Shape_1[2].xpos,bez_elmnts_Shape_1[2].ypos,bez_elmnts_Shape_1[3].xpos,bez_elmnts_Shape_1[3].ypos);	bezierVertex(bez_elmnts_Shape_1[4].xpos,bez_elmnts_Shape_1[4].ypos,bez_elmnts_Shape_1[5].xpos,bez_elmnts_Shape_1[5].ypos,bez_elmnts_Shape_1[6].xpos,bez_elmnts_Shape_1[6].ypos);  
+                quadraticVertex(bez_elmnts_Shape_1[6].xpos,bez_elmnts_Shape_1[6].ypos,bez_elmnts_Shape_1[7].xpos,bez_elmnts_Shape_1[7].ypos,bez_elmnts_Shape_1[0].xpos,bez_elmnts_Shape_1[0].ypos);
                 endShape();
 
 
                 // TEST ELLIPSE AS I WORKED OUT THE BUGS FOR BILLATERAL DRAWING
-    //            ellipse(bilat_x(bez_elmnts[0].xpos,bez_elmnts[0].ypos),bilat_y(bez_elmnts[0].xpos,bez_elmnts[0].ypos),50,50);
-    //            ellipse(calc_bilat_x(bez_elmnts[0].xpos),calc_bilat_y(bez_elmnts[0].ypos),50,50);
+    //            ellipse(bilat_x(bez_elmnts_Shape_1[0].xpos,bez_elmnts_Shape_1[0].ypos),bilat_y(bez_elmnts_Shape_1[0].xpos,bez_elmnts_Shape_1[0].ypos),50,50);
+    //            ellipse(calc_bilat_x(bez_elmnts_Shape_1[0].xpos),calc_bilat_y(bez_elmnts_Shape_1[0].ypos),50,50);
                 
                 // DRAWS THE BILATERAL EQUIVALENT OF Shape 1
                 if(bilateral_1){
                     beginShape();
-                    vertex(bilat_x(bez_elmnts[0].xpos,bez_elmnts[0].ypos),bilat_y(bez_elmnts[0].xpos,bez_elmnts[0].ypos));
-                    bezierVertex(bilat_x(bez_elmnts[1].xpos,bez_elmnts[1].ypos),bilat_y(bez_elmnts[1].xpos,bez_elmnts[1].ypos),bilat_x(bez_elmnts[2].xpos,bez_elmnts[2].ypos),bilat_y(bez_elmnts[2].xpos,bez_elmnts[2].ypos),
-                    bilat_x(bez_elmnts[3].xpos,bez_elmnts[3].ypos),bilat_y(bez_elmnts[3].xpos,bez_elmnts[3].ypos));
-                    bezierVertex(bilat_x(bez_elmnts[4].xpos,bez_elmnts[4].ypos),bilat_y(bez_elmnts[4].xpos,bez_elmnts[4].ypos),bilat_x(bez_elmnts[5].xpos,bez_elmnts[5].ypos),bilat_y(bez_elmnts[5].xpos,bez_elmnts[5].ypos),
-                    bilat_x(bez_elmnts[6].xpos,bez_elmnts[6].ypos),bilat_y(bez_elmnts[6].xpos,bez_elmnts[6].ypos));
-                    quadraticVertex(bilat_x(bez_elmnts[6].xpos,bez_elmnts[6].ypos),bilat_y(bez_elmnts[6].xpos,bez_elmnts[6].ypos),bilat_x(bez_elmnts[7].xpos,bez_elmnts[7].ypos),bilat_y(bez_elmnts[7].xpos,bez_elmnts[7].ypos),
-                    bilat_x(bez_elmnts[0].xpos,bez_elmnts[0].ypos),bilat_y(bez_elmnts[0].xpos,bez_elmnts[0].ypos));
+                    vertex(bilat_x(bez_elmnts_Shape_1[0].xpos,bez_elmnts_Shape_1[0].ypos),bilat_y(bez_elmnts_Shape_1[0].xpos,bez_elmnts_Shape_1[0].ypos));
+                    bezierVertex(bilat_x(bez_elmnts_Shape_1[1].xpos,bez_elmnts_Shape_1[1].ypos),bilat_y(bez_elmnts_Shape_1[1].xpos,bez_elmnts_Shape_1[1].ypos),bilat_x(bez_elmnts_Shape_1[2].xpos,bez_elmnts_Shape_1[2].ypos),bilat_y(bez_elmnts_Shape_1[2].xpos,bez_elmnts_Shape_1[2].ypos),
+                    bilat_x(bez_elmnts_Shape_1[3].xpos,bez_elmnts_Shape_1[3].ypos),bilat_y(bez_elmnts_Shape_1[3].xpos,bez_elmnts_Shape_1[3].ypos));
+                    bezierVertex(bilat_x(bez_elmnts_Shape_1[4].xpos,bez_elmnts_Shape_1[4].ypos),bilat_y(bez_elmnts_Shape_1[4].xpos,bez_elmnts_Shape_1[4].ypos),bilat_x(bez_elmnts_Shape_1[5].xpos,bez_elmnts_Shape_1[5].ypos),bilat_y(bez_elmnts_Shape_1[5].xpos,bez_elmnts_Shape_1[5].ypos),
+                    bilat_x(bez_elmnts_Shape_1[6].xpos,bez_elmnts_Shape_1[6].ypos),bilat_y(bez_elmnts_Shape_1[6].xpos,bez_elmnts_Shape_1[6].ypos));
+                    quadraticVertex(bilat_x(bez_elmnts_Shape_1[6].xpos,bez_elmnts_Shape_1[6].ypos),bilat_y(bez_elmnts_Shape_1[6].xpos,bez_elmnts_Shape_1[6].ypos),bilat_x(bez_elmnts_Shape_1[7].xpos,bez_elmnts_Shape_1[7].ypos),bilat_y(bez_elmnts_Shape_1[7].xpos,bez_elmnts_Shape_1[7].ypos),
+                    bilat_x(bez_elmnts_Shape_1[0].xpos,bez_elmnts_Shape_1[0].ypos),bilat_y(bez_elmnts_Shape_1[0].xpos,bez_elmnts_Shape_1[0].ypos));
                     endShape();                    
                 }
                 // END    DRAWS THE BILATERAL EQUIVALENT OF Shape 1
@@ -1626,9 +1998,55 @@ function draw(){
         } // END   if(show_shape_1)    END
 
         
-                // code below uses the BEZIER segment CLASS v2
+        // code below uses the BEZIER segment CLASS v2
 
-        // DRAWS Shape 2
+        // DRAWS Shape 2, which, if refactoring of Shape 2.1 goes well, is not needed
+        // if(show_shape_2){        
+        //     for(var k = 0; k < k_repeats; k++){
+        //         if(k==0 && handle_outline_viz){
+        //             if(bkgrnd_luminance >= 12){
+        //                 stroke(color('rgba(0, 0, 0, 0.76)'));
+        //             } else {
+        //                 stroke(color('rgba(255, 255, 255, 0.76)'));
+        //             }
+        //             strokeWeight(1);
+        //         } else {
+        //             noStroke();
+        //         }
+        //         if(lines2 || laser_light_show){
+        //             stroke(red_2, grn_2, blu_2, transparency_2); 
+        //             strokeWeight(3);
+        //             noFill();
+
+        //             } else {
+        //                 fill(red_2, grn_2, blu_2, transparency_2);
+        //         }
+        //     // draws 'normal' version
+        //         beginShape();
+        //         vertex(first_pt['xpos'],first_pt['ypos']);
+        //         bezierVertex(tBs2.cntrl1['xpos'],tBs2.cntrl1['ypos'], tBs2.cntrl2['xpos'], tBs2.cntrl2['ypos'], tBs2.anchor['xpos'],tBs2.anchor['ypos']);
+        //         bezierVertex(0,85,tBs2.last['xpos'],tBs2.last['ypos'],first_pt['xpos'],first_pt['ypos']);
+        //         endShape();
+                
+        //         // draws bilateral version
+        //         if(bilateral_2){
+        //             beginShape();
+        //             vertex(bilat_x(first_pt['xpos'],first_pt['ypos']),bilat_y(first_pt['xpos'],first_pt['ypos']));
+        //             bezierVertex(bilat_x(tBs2.cntrl1['xpos'],tBs2.cntrl1['ypos']),bilat_y(tBs2.cntrl1['xpos'],tBs2.cntrl1['ypos']), bilat_x(tBs2.cntrl2['xpos'],tBs2.cntrl2['ypos']), bilat_y(tBs2.cntrl2['xpos'],tBs2.cntrl2['ypos']), bilat_x(tBs2.anchor['xpos'],tBs2.anchor['ypos']),bilat_y(tBs2.anchor['xpos'],tBs2.anchor['ypos']));
+        //             bezierVertex(bilat_x(0,85),bilat_y(0,85),bilat_x(tBs2.last['xpos'],tBs2.last['ypos']),bilat_y(tBs2.last['xpos'],tBs2.last['ypos']),bilat_x(first_pt['xpos'],first_pt['ypos']),bilat_y(first_pt['xpos'],first_pt['ypos']));
+        //             endShape();                    
+        //         }
+                
+        //         rotate(PI * 2/k_repeats);
+        //     } // END OF for loop THAT REPEATS Shape 2 based on # of repeats
+        // } // END OF  DRAWS Shape 2, which, if refactoring of Shape 2.1 goes well, is not needed
+
+        
+        
+        
+        // code below DOES NOT use the BEZIER segment CLASS v2, but instead uses an Array; part of the Refactoring of Shape 2.1
+
+        // DRAWS Shape 2.1
         if(show_shape_2){        
             for(var k = 0; k < k_repeats; k++){
                 if(k==0 && handle_outline_viz){
@@ -1647,28 +2065,34 @@ function draw(){
                     noFill();
 
                     } else {
-                        fill(red_2, grn_2, blu_2, transparency_2);
+                        fill(red_2, grn_2, blu_2, transparency_2); // production code, uncomment when refactor of Shape 2.1 is done
+                        // fill(255, 0, 0, transparency_2); // test code, comment out when refactor of Shape 2.1 is done
                 }
             // draws 'normal' version
                 beginShape();
-//                vertex(first_pt.point['xpos'],first_pt.point['ypos']); // when this point didn't animate
-                vertex(first_pt['xpos'],first_pt['ypos']);
-                bezierVertex(tBs2.cntrl1['xpos'],tBs2.cntrl1['ypos'], tBs2.cntrl2['xpos'], tBs2.cntrl2['ypos'], tBs2.anchor['xpos'],tBs2.anchor['ypos']);
-                bezierVertex(0,85,tBs2.last['xpos'],tBs2.last['ypos'],first_pt['xpos'],first_pt['ypos']);
+                // vertex(first_pt['xpos'],first_pt['ypos']);  // from Shape 2
+                vertex(bez_elmnts_Shape_2[0].xpos,bez_elmnts_Shape_2[0].ypos); // refactor Shape 2.1
+                // bezierVertex(tBs2.cntrl1['xpos'],tBs2.cntrl1['ypos'], tBs2.cntrl2['xpos'], tBs2.cntrl2['ypos'], tBs2.anchor['xpos'],tBs2.anchor['ypos']);  // from Shape 2
+                bezierVertex(bez_elmnts_Shape_2[1].xpos,bez_elmnts_Shape_2[1].ypos, bez_elmnts_Shape_2[2].xpos,bez_elmnts_Shape_2[2].ypos, bez_elmnts_Shape_2[3].xpos,bez_elmnts_Shape_2[3].ypos);  // refactor Shape 2.1
+                // bezierVertex(0,85,tBs2.last['xpos'],tBs2.last['ypos'],first_pt['xpos'],first_pt['ypos']);  // from Shape 2
+                bezierVertex(0,85,bez_elmnts_Shape_2[4].xpos,bez_elmnts_Shape_2[4].ypos,bez_elmnts_Shape_2[0].xpos,bez_elmnts_Shape_2[0].ypos);  //  refactor Shape 2.1
                 endShape();
                 
                 // draws bilateral version
                 if(bilateral_2){
                     beginShape();
-                    vertex(bilat_x(first_pt['xpos'],first_pt['ypos']),bilat_y(first_pt['xpos'],first_pt['ypos']));
-                    bezierVertex(bilat_x(tBs2.cntrl1['xpos'],tBs2.cntrl1['ypos']),bilat_y(tBs2.cntrl1['xpos'],tBs2.cntrl1['ypos']), bilat_x(tBs2.cntrl2['xpos'],tBs2.cntrl2['ypos']), bilat_y(tBs2.cntrl2['xpos'],tBs2.cntrl2['ypos']), bilat_x(tBs2.anchor['xpos'],tBs2.anchor['ypos']),bilat_y(tBs2.anchor['xpos'],tBs2.anchor['ypos']));
-                    bezierVertex(bilat_x(0,85),bilat_y(0,85),bilat_x(tBs2.last['xpos'],tBs2.last['ypos']),bilat_y(tBs2.last['xpos'],tBs2.last['ypos']),bilat_x(first_pt['xpos'],first_pt['ypos']),bilat_y(first_pt['xpos'],first_pt['ypos']));
+                    // vertex(bilat_x(first_pt['xpos'],first_pt['ypos']),bilat_y(first_pt['xpos'],first_pt['ypos']));  // from Shape 2
+                    vertex(bilat_x(bez_elmnts_Shape_2[0].xpos,bez_elmnts_Shape_2[0].ypos),bilat_y(bez_elmnts_Shape_2[0].xpos,bez_elmnts_Shape_2[0].ypos));  // refactor Shape 2.1
+                    // bezierVertex(bilat_x(tBs2.cntrl1['xpos'],tBs2.cntrl1['ypos']),bilat_y(tBs2.cntrl1['xpos'],tBs2.cntrl1['ypos']), bilat_x(tBs2.cntrl2['xpos'],tBs2.cntrl2['ypos']), bilat_y(tBs2.cntrl2['xpos'],tBs2.cntrl2['ypos']), bilat_x(tBs2.anchor['xpos'],tBs2.anchor['ypos']),bilat_y(tBs2.anchor['xpos'],tBs2.anchor['ypos']));  // from Shape 2
+                    bezierVertex(bilat_x(bez_elmnts_Shape_2[1].xpos,bez_elmnts_Shape_2[1].ypos),bilat_y(bez_elmnts_Shape_2[1].xpos,bez_elmnts_Shape_2[1].ypos), bilat_x(bez_elmnts_Shape_2[2].xpos,bez_elmnts_Shape_2[2].ypos), bilat_y(bez_elmnts_Shape_2[2].xpos,bez_elmnts_Shape_2[2].ypos), bilat_x(bez_elmnts_Shape_2[3].xpos,bez_elmnts_Shape_2[3].ypos),bilat_y(bez_elmnts_Shape_2[3].xpos,bez_elmnts_Shape_2[3].ypos));  // refactor Shape 2.1
+                    // bezierVertex(bilat_x(0,85),bilat_y(0,85),bilat_x(tBs2.last['xpos'],tBs2.last['ypos']),bilat_y(tBs2.last['xpos'],tBs2.last['ypos']),bilat_x(first_pt['xpos'],first_pt['ypos']),bilat_y(first_pt['xpos'],first_pt['ypos'])); // from Shape 2
+                    bezierVertex(bilat_x(0,85),bilat_y(0,85),bilat_x(bez_elmnts_Shape_2[4].xpos,bez_elmnts_Shape_2[4].ypos),bilat_y(bez_elmnts_Shape_2[4].xpos,bez_elmnts_Shape_2[4].ypos),bilat_x(bez_elmnts_Shape_2[0].xpos,bez_elmnts_Shape_2[0].ypos),bilat_y(bez_elmnts_Shape_2[0].xpos,bez_elmnts_Shape_2[0].ypos)); // refactor Shape 2.1
                     endShape();                    
                 }
                 
                 rotate(PI * 2/k_repeats);
-            } // END OF for loop THAT REPEATS Shape 2 based on # of repeats
-        } // END OF if THAT DRAWS Shape 2
+            } // END OF for loop THAT REPEATS Shape 2.1 based on # of repeats
+        } // END OF if THAT DRAWS Shape 2.1
         
         
         
@@ -1777,17 +2201,25 @@ function draw(){
             // SHAPE 1 HANDLES
             if(show_shape_1){
                 
-                for (var i = 0; i < bez_elmnts.length; i++) {
-                    bez_elmnts[i].show_handle(red_1,grn_1,blu_1);
+                for (var i = 0; i < bez_elmnts_Shape_1.length; i++) {
+                    bez_elmnts_Shape_1[i].show_handle(red_1,grn_1,blu_1);
                 }        
             }
             // SHAPE 2 HANDLES
+            // if(show_shape_2){
+            //     first_pt.show_handle(red_2,grn_2,blu_2);
+            //     tBs2.cntrl1.show_handle(red_2,grn_2,blu_2);
+            //     tBs2.cntrl2.show_handle(red_2,grn_2,blu_2);
+            //     tBs2.anchor.show_handle(red_2,grn_2,blu_2);
+            //     tBs2.last.show_handle(red_2,grn_2,blu_2);
+            // }
+            
+            // SHAPE 2.1 HANDLES
             if(show_shape_2){
-                first_pt.show_handle(red_2,grn_2,blu_2);
-                tBs2.cntrl1.show_handle(red_2,grn_2,blu_2);
-                tBs2.cntrl2.show_handle(red_2,grn_2,blu_2);
-                tBs2.anchor.show_handle(red_2,grn_2,blu_2);
-                tBs2.last.show_handle(red_2,grn_2,blu_2);
+                for (var i = 0; i < bez_elmnts_Shape_2.length; i++) {
+                    bez_elmnts_Shape_2[i].show_handle(red_2,grn_2,blu_2); // production code
+                    // bez_elmnts_Shape_2[i].show_handle(255,0,0); // test code
+                }
             }
             
             // SHAPE 3 HANDLES
@@ -2235,12 +2667,12 @@ function Bez_point(name,bx,by,r,g,b,a){
 	this.show_handle = function(r,g,b) {
              strokeWeight(3);
             stroke(r,g,b,a);
-
+        // if the mouse is over this handle, change its fill to black
         if (mouseX - canvas_c_x > this.xpos - this.elmt_size && mouseX - canvas_c_x < this.xpos + this.elmt_size &&
             mouseY - canvas_c_y > this.ypos - this.elmt_size && mouseY - canvas_c_y < this.ypos + this.elmt_size) {
             this.mouse_over = true;
             fill(0,0,0);
- 
+            // if the mouse is over this handled and is pressed, change the stroke color to pale red
             if (mouseIsPressed && this.mouse_over == true) {
                 stroke(200, 79, 100);
             } else {
@@ -2248,11 +2680,26 @@ function Bez_point(name,bx,by,r,g,b,a){
  
         } else {
             this.mouse_over = false;
-            fill(255,255,255,a);
-            
+            fill(255,255,255,a);            
         }
+        // making the handle touch aware
+        // if (p5js.touches[0].x - canvas_c_x > this.xpos - this.elmt_size && p5js.touches[0].x - canvas_c_x < this.xpos + this.elmt_size &&
+        //     p5js.touches[0].y - canvas_c_y > this.ypos - this.elmt_size && p5js.touches[0].y - canvas_c_y < this.ypos + this.elmt_size) {
+        //     this.mouse_over = true;
+        //     fill(0,0,0);
+ 
+        //     if (p5js.mouseIsPressed && this.mouse_over == true) {
+        //         stroke(200, 79, 100);
+        //     } else {
+        //     }
+ 
+        // } else {
+        //     this.mouse_over = false;
+        //     fill(255,255,255,a);            
+        // }
         ellipse(this.xpos, this.ypos, this.elmt_size, this.elmt_size);
     };
+
     this.update_radius_angle = function (xx,yy){
         this.radius = Math.sqrt((xx ** 2) + (yy ** 2));
         this.angle = Math.atan2(yy,xx) * 180 / Math.PI;
@@ -2711,15 +3158,16 @@ var hypoTrochoid = function(radius_in,direction) {
 };
 
 function reset_shape_1_points() {
-    for(i = 0; i < bez_elmnts.length; i += 1){
-        bez_elmnts[i].xpos = shape_1_original_points_x_coordinates[i];
-        bez_elmnts[i].ypos = shape_1_original_points_y_coordinates[i];
-        bez_elmnts[i].update_radius_angle(bez_elmnts[i].xpos,bez_elmnts[i].ypos);
+    for(i = 0; i < bez_elmnts_Shape_1.length; i += 1){
+        bez_elmnts_Shape_1[i].xpos = shape_1_original_points_x_coordinates[i];
+        bez_elmnts_Shape_1[i].ypos = shape_1_original_points_y_coordinates[i];
+        bez_elmnts_Shape_1[i].update_radius_angle(bez_elmnts_Shape_1[i].xpos,bez_elmnts_Shape_1[i].ypos);
     }
 }
 
 function reset_shape_2_points() {
     
+    // for Shape 2, which, if Shape 2.1 refactor goes well, these won't be needed
     first_pt.xpos = 0;
     first_pt.ypos = 0;
     first_pt.update_radius_angle(0,0);
@@ -2739,6 +3187,13 @@ function reset_shape_2_points() {
     tBs2.last.xpos = canvas_w * -0.022;
     tBs2.last.ypos = canvas_h * 0.488;
     tBs2.last.update_radius_angle(canvas_w * -0.022, canvas_h * 0.488);
+
+    // for Shape 2.1 refactor
+    for(i = 0; i < bez_elmnts_Shape_2.length; i += 1){
+        bez_elmnts_Shape_2[i].xpos = shape_2_1_original_points_x_coordinates[i];
+        bez_elmnts_Shape_2[i].ypos = shape_2_1_original_points_y_coordinates[i];
+        bez_elmnts_Shape_2[i].update_radius_angle(bez_elmnts_Shape_2[i].xpos,bez_elmnts_Shape_2[i].ypos);
+    }
 }
 
 function reset_shape_3_points() {
