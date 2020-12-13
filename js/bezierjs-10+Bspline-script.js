@@ -216,7 +216,7 @@ var scaler = 0.9;
 
 var square_points = []; // was testing the spirograph idea, but also to see if an array of points is easier than an array of segments (it is)
 
-var speed_spiro = 540;
+var speed_spiro = 540; // original is 540, which = speed_spiro_normalized value of 24
 var speed_spiro_max = 32; // increments are 60, so, max is really 1920
 // and spiro speed is actually opposite, lower value means faster
 // so, 300 is really the fastest, 1920 the slowest, but we'll normalize that for the user
