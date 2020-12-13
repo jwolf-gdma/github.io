@@ -931,6 +931,9 @@ function set_transparency(){
 //    transparency_background = parseInt(document.getElementById('transparency_background').value);
 }
 
+var fingerX;
+var fingerY;
+
 document.getElementById("transparency_range_1").addEventListener("input", set_transparency);
 document.getElementById("transparency_range_2").addEventListener("input", set_transparency);
 document.getElementById("transparency_range_3").addEventListener("input", set_transparency);
@@ -940,8 +943,8 @@ document.getElementById("transparency_range_4").addEventListener("input", set_tr
 function touchStarted(event) {
     // var fingerX = touches[0].x - canvas_c_x;
     // var fingerY = touches[0].y - canvas_c_y;
-    var fingerX = touches[0].x;
-    var fingerY = touches[0].y;
+    fingerX = touches[0].x;
+    fingerY = touches[0].y;
     // console.log(fingerX);
 
     // check to see which point in Shape 1 was tapped, and set it to selected
@@ -1133,9 +1136,16 @@ function mousePressed() {
     }
 }
 
+var future_mouseX; // handling touch events is tricky
+var future_mouseY;
+
 function touchMoved(){
     // console.log('touch move detected');
     // console.log(touches[0].x - canvas_c_x);
+
+    future_mouseX = touches[0].x - canvas_c_x; // attempt at getting the handles to have a white fill when touchEnded function is called
+    future_mouseY = touches[0].y - canvas_c_y;
+
     // this for loop is related to Shape 1
     for (var i = 0; i < bez_elmnts_Shape_1.length; i++) {
         if (bez_elmnts_Shape_1[i].selected) {
@@ -1312,6 +1322,10 @@ function mouseDragged() {
     // END     for loop related to Shape 4     END    
 }
 function touchEnded() {
+
+    mouseX = future_mouseX; // so the handle has a solid white fill when user lifts finger
+    mouseY = future_mouseY;
+
     // unselect all points in Shape 1
     for (var i = 0; i < bez_elmnts_Shape_1.length; i++) {
         bez_elmnts_Shape_1[i].selected = false;
@@ -1341,6 +1355,7 @@ function touchEnded() {
     // unselect all points in Shape 2.1
     for (var i = 0; i < bez_elmnts_Shape_2.length; i++) {
         bez_elmnts_Shape_2[i].selected = false;
+        bez_elmnts_Shape_2[i].mouse_over = false;
     }
 
     // unselect all points in Shape 4
