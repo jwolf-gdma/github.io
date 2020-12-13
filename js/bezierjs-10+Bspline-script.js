@@ -1707,8 +1707,8 @@ function draw(){
         } else {
             // ***************************
             // "NORMAL" animation equation
-            bez_elmnts_Shape_2[1]['xpos'] = bez_elmnts_Shape_2[1].radius * Math.cos(bez_elmnts_Shape_2[1].angle); // when radius & angle are retrieved from the object
-            bez_elmnts_Shape_2[1]['ypos'] = bez_elmnts_Shape_2[1].radius * Math.sin(bez_elmnts_Shape_2[1].angle); // 
+            bez_elmnts_Shape_2[1].xpos = bez_elmnts_Shape_2[1].radius * Math.cos(bez_elmnts_Shape_2[1].angle); // when radius & angle are retrieved from the object
+            bez_elmnts_Shape_2[1].ypos = bez_elmnts_Shape_2[1].radius * Math.sin(bez_elmnts_Shape_2[1].angle); // 
             // ***************************
         }
                 
@@ -1719,29 +1719,29 @@ function draw(){
         if(anim2_anchor_loop_count == 0){
             anim2_anchor_loop_count = 1;
         }
-    bez_elmnts_Shape_2[4].angle -= ((2 * Math.PI) / (incrementer_base / incrementer2)); // when radius & angle are retrieved from the object
+    bez_elmnts_Shape_2[3].angle -= ((2 * Math.PI) / (incrementer_base / incrementer2)); // when radius & angle are retrieved from the object
                 
         if(spiro_option){
             if(epitro_radio){
-                bez_elmnts_Shape_2[4].xpos = (bez_elmnts_Shape_2[4].radius + r_spiro) * Math.cos(theta_2_2) - (point_on_small_r * Math.cos(((bez_elmnts_Shape_2[4].radius + r_spiro)/r_spiro) * theta_2_2));
-                bez_elmnts_Shape_2[4].ypos = (bez_elmnts_Shape_2[4].radius + r_spiro) * Math.sin(theta_2_2) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_2[4].radius + r_spiro)/r_spiro) * theta_2_2));
+                bez_elmnts_Shape_2[3].xpos = (bez_elmnts_Shape_2[3].radius + r_spiro) * Math.cos(theta_2_2) - (point_on_small_r * Math.cos(((bez_elmnts_Shape_2[3].radius + r_spiro)/r_spiro) * theta_2_2));
+                bez_elmnts_Shape_2[3].ypos = (bez_elmnts_Shape_2[3].radius + r_spiro) * Math.sin(theta_2_2) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_2[3].radius + r_spiro)/r_spiro) * theta_2_2));
                 theta_2_2 += (2*Math.PI)/speed_spiro;
             } else {
-                bez_elmnts_Shape_2[4].xpos = (bez_elmnts_Shape_2[4].radius - r_spiro) * Math.cos(theta_2_2) + (point_on_small_r * Math.cos(((bez_elmnts_Shape_2[4].radius - r_spiro)/r_spiro) * theta_2_2));
-                bez_elmnts_Shape_2[4].ypos = (bez_elmnts_Shape_2[4].radius - r_spiro) * Math.sin(theta_2_2) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_2[4].radius - r_spiro)/r_spiro) * theta_2_2));
+                bez_elmnts_Shape_2[3].xpos = (bez_elmnts_Shape_2[3].radius - r_spiro) * Math.cos(theta_2_2) + (point_on_small_r * Math.cos(((bez_elmnts_Shape_2[3].radius - r_spiro)/r_spiro) * theta_2_2));
+                bez_elmnts_Shape_2[3].ypos = (bez_elmnts_Shape_2[3].radius - r_spiro) * Math.sin(theta_2_2) - (point_on_small_r * Math.sin(((bez_elmnts_Shape_2[3].radius - r_spiro)/r_spiro) * theta_2_2));
                 theta_2_2 += (2*Math.PI)/speed_spiro;
             }
         } else {
             // ***************************
             // "NORMAL" animation equation
-            bez_elmnts_Shape_2[4]['xpos'] = bez_elmnts_Shape_2[4].radius * Math.cos(bez_elmnts_Shape_2[4].angle); // when radius & angle are retrieved from the object
-            bez_elmnts_Shape_2[4]['ypos'] = bez_elmnts_Shape_2[4].radius * Math.sin(bez_elmnts_Shape_2[4].angle); // 
+            bez_elmnts_Shape_2[3].xpos = bez_elmnts_Shape_2[3].radius * Math.cos(bez_elmnts_Shape_2[3].angle); // when radius & angle are retrieved from the object
+            bez_elmnts_Shape_2[3].ypos = bez_elmnts_Shape_2[3].radius * Math.sin(bez_elmnts_Shape_2[3].angle); // 
             // ***************************
         }
                 
         if(anim2_anchor_loop_count == 1){
 //            console.log('anim2_anchor loop went once');
-//            console.log('now anchor.angle = ' + bez_elmnts_Shape_2[4].angle);
+//            console.log('now anchor.angle = ' + bez_elmnts_Shape_2[3].angle);
             anim2_anchor_loop_count = 2;
         }
     }  // END     if(animating2_anchor && loop_status)     END
