@@ -99,9 +99,9 @@ var grn_1 =   3;  // originally 98
 var blu_1 = 123;  // originally 0  
 
 var color_2_rgb;
-var red_2 = 100;  // originally 77   together = teal
-var grn_2 = 255;  // originally 235  together = teal
-var blu_2 = 100;  // originally 255  together = teal
+var red_2 = 77 ;  // originally 77   together = teal
+var grn_2 = 235;  // originally 235  together = teal
+var blu_2 = 255;  // originally 255  together = teal
 
 var color_3_rgb;
 var red_1_square = 241;  // originally 139
