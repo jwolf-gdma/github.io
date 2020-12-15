@@ -840,7 +840,8 @@ function setup(){
     bez_elmnts_Shape_2.push(new Bez_point("control1",canvas_w * 0.056,canvas_h * 0.106,red_2,grn_2,blu_2, fill_a));
     bez_elmnts_Shape_2.push(new Bez_point("control2",canvas_w * 0.163,canvas_h * 0.306,red_2,grn_2,blu_2, fill_a));
     bez_elmnts_Shape_2.push(new Bez_point("anchor1",canvas_w * 0.131,canvas_h * 0.424,red_2,grn_2,blu_2, fill_a));
-    bez_elmnts_Shape_2.push(new Bez_point("last", canvas_w * -0.022, canvas_h * 0.488,red_2,grn_2,blu_2, fill_a));
+    // bez_elmnts_Shape_2.push(new Bez_point("last", canvas_w * -0.022, canvas_h * 0.488,red_2,grn_2,blu_2, fill_a)); // fine on Desktop, but on iPad, too close to bottom edge, would acidentally invoke the Dock
+    bez_elmnts_Shape_2.push(new Bez_point("last", canvas_w * -0.022, canvas_h * 0.424,red_2,grn_2,blu_2, fill_a));
 
     // STORE THE X and Y COORDINATES FOR SHAPE 2.1, SO USER CAN RESET THEM
     for(i = 0; i < bez_elmnts_Shape_2.length; i += 1){
@@ -2233,6 +2234,9 @@ function draw(){
                 for (var i = 0; i < bez_elmnts_Shape_2.length; i++) {
                     bez_elmnts_Shape_2[i].show_handle(red_2,grn_2,blu_2); // production code
                     // bez_elmnts_Shape_2[i].show_handle(255,0,0); // test code
+                    // textSize(20);
+                    // noStroke();
+                    // text(i,bez_elmnts_Shape_2[i].xpos+20,bez_elmnts_Shape_2[i].ypos+5); // HANDLES_TEST, but kind of nice so I kept it
                 }
             }
             
@@ -2247,7 +2251,9 @@ function draw(){
             if(show_shape_4){
                 for (var i = 0; i < bspline_handles.length; i++){
                     bspline_handles[i].show_handle(red_4,grn_4,blu_4);
-                    text(i,bspline_handles[i].xpos+20,bspline_handles[i].ypos+5); // HANDLES_TEST, but kind of nice so I kept it
+                    // textSize(20);
+                    // noStroke();
+                    // text(i,bspline_handles[i].xpos+20,bspline_handles[i].ypos+5); // HANDLES_TEST, but kind of nice so I kept it
                 }
             }
             
