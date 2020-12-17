@@ -51,13 +51,14 @@ var i_feel_love_checkbox;
 var i_feel_love_song;
 
 // HOWLER WORKS BETTER WITH MP3s THAT HAVE A CONSTANT BITRATE
-function preload() {
-  i_feel_love_song = new Howl({
-  src: ['assets/i_feel_love-looper.mp3']
-});
-    console.log('song pre loaded');
-    i_feel_love_song.loop(true);
-}
+// temporarily deactivated for public hosting
+// function preload() {
+//   i_feel_love_song = new Howl({
+//   src: ['assets/i_feel_love-looper.mp3']
+// });
+//     console.log('song pre loaded');
+//     i_feel_love_song.loop(true);
+// }
 
 // BEZIER VARIABLES     
 var bez_elmnts_Shape_1 = [];
@@ -247,7 +248,7 @@ var default_canvas;
 window.onload = function(){
     speed_spiro_normalized = speed_spiro_max - (speed_spiro / 60) + 1;
     document.getElementById('readout_spiro_speed').innerHTML = speed_spiro_normalized;
-    preload();
+    // preload(); // related to Howler and i_feel_love
     document.addEventListener('keydown',evaluate_key);
 };
 
@@ -582,40 +583,39 @@ document.addEventListener('click', function (event) {
     
 }, false);
 
-document.getElementById('laser_light_show').addEventListener('change', function(){
-    laser_light_show = document.getElementById('laser_light_show').checked;
+// document.getElementById('laser_light_show').addEventListener('change', function(){
+//     laser_light_show = document.getElementById('laser_light_show').checked;
     
-    if(laser_light_show){
-        background(0,0,0,255);
-        document.getElementById('vis_hide_1').classList.remove('hidden');
-        document.getElementById('i_feel_love_checkbox').classList.remove('hidden');
-    }
+//     if(laser_light_show){
+//         background(0,0,0,255);
+//         document.getElementById('vis_hide_1').classList.remove('hidden');
+//         document.getElementById('i_feel_love_checkbox').classList.remove('hidden');
+//     }
 
-    if(!laser_light_show){
-        document.getElementById('vis_hide_1').classList.add('hidden');        
-        document.getElementById('i_feel_love_checkbox').classList.add('hidden');        
-    }
+//     if(!laser_light_show){
+//         document.getElementById('vis_hide_1').classList.add('hidden');        
+//         document.getElementById('i_feel_love_checkbox').classList.add('hidden');        
+//     }
     
-    if(!laser_light_show && i_feel_love_song.playing()){
-        i_feel_love_song.pause();
-    }
+//     if(!laser_light_show && i_feel_love_song.playing()){
+//         i_feel_love_song.pause();
+//     }
     
-    if(laser_light_show && i_feel_love_checkbox && !i_feel_love_song.playing()){
-        i_feel_love_song.play();
-    }
-    
-}, false);
+//     if(laser_light_show && i_feel_love_checkbox && !i_feel_love_song.playing()){
+//         i_feel_love_song.play();
+//     }    
+// }, false);
 
-document.getElementById('i_feel_love_checkbox').addEventListener('change', function(){
-    i_feel_love_checkbox = document.getElementById('i_feel_love_checkbox').checked;
+// document.getElementById('i_feel_love_checkbox').addEventListener('change', function(){
+//     i_feel_love_checkbox = document.getElementById('i_feel_love_checkbox').checked;
 
-    if(i_feel_love_checkbox && laser_light_show){
-        i_feel_love_song.play();
-    }
-    if(!i_feel_love_checkbox) {
-        i_feel_love_song.pause();
-    }
-}, false);
+//     if(i_feel_love_checkbox && laser_light_show){
+//         i_feel_love_song.play();
+//     }
+//     if(!i_feel_love_checkbox) {
+//         i_feel_love_song.pause();
+//     }
+// }, false);
 
 function erase_background(){
         background(0,0,0,255);    
@@ -1409,23 +1409,19 @@ function pause_toggle(){
 	if(loop_status){
 		loop_status = false;
         document.getElementById('pause_resume_btn').innerHTML="resume";
-//        console.log('loop_status was true, so I stopped it');
-        if(i_feel_love_song.playing){
-            i_feel_love_song.pause();
-        }
+        // if(i_feel_love_song.playing){
+        //     i_feel_love_song.pause();
+        // }
         return false;
 	}
     
     if(!loop_status) {
 		loop_status = true;
         document.getElementById('pause_resume_btn').innerHTML="pause";
-//        console.log('loop_status was false, so I started it');
-        var is_song_playing = i_feel_love_song.playing();
-//        console.log('song status = ' + is_song_playing);
-        if(i_feel_love_checkbox && laser_light_show && !is_song_playing){
-            i_feel_love_song.play();
-//            console.log('song should play now');
-        }
+        // var is_song_playing = i_feel_love_song.playing();
+        // if(i_feel_love_checkbox && laser_light_show && !is_song_playing){
+        //     i_feel_love_song.play();
+        // }
         return false;
 	}
 }
@@ -1489,7 +1485,7 @@ function draw(){
     animating4_2 = document.getElementById('anim4_2').checked;
     laser_light_show = document.getElementById('laser_light_show').checked;
     laser_strength = parseInt(41 - document.getElementById('slider_laser_strength').value);
-    i_feel_love_checkbox = document.getElementById('i_feel_love_checkbox').checked;
+    // i_feel_love_checkbox = document.getElementById('i_feel_love_checkbox').checked;
     if(!animating2_anchor){
         anim2_anchor_is_animating = false;
         anim2_anchor_loop_count = 0;

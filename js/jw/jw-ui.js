@@ -1,126 +1,100 @@
+// jw-ui version 1.0 December 16, 2020
+
+// THIS MAKES IT ALL WORK. JUST ADD THIS CLASS TO ANY ELEMENT IN YOUR HTML,
+// AND THE SCRIPT BELOW WILL TURN THAT ELEMENT INTO A COLLAPSEABLE ELEMENT
+// IT WILL ALSO MAKE THE PREVIOUS SIBLING THE CLICKABLE TRIGGER BY ADDING THE 'jw_ui_controller' CLASS TO IT
 var jw_ui_elements = document.getElementsByClassName('jw_ui');
-//console.log(ui_elements);
 
-//var evt;
-
-window.onload = function(){
-//    console.log('onload triggered');
-    for(i=0;i<jw_ui_elements.length;i++){    
-//        jw_ui_elements[i].firstElementChild.addEventListener('transitionend', toggle_display);
-//        console.log('jw_ui_elements['+i+'].firstElementChild');
-//        console.log(jw_ui_elements[i].firstElementChild);
-    }
-}
 
 for(i=0;i<jw_ui_elements.length;i++){
+    // STORES THE 'COMPUTED' HEIGHT IN A DATA- ATTRIBUTE
+    // SO THAT THE FUNCTION THAT OPENS IT KNOWS HOW TALL TO MAKE IT
     jw_ui_elements[i].setAttribute('data-jwui-original-height',jw_ui_elements[i].offsetHeight);
+
+    // DON'T REMEMBER EXACTLY WHY, BUT THOUGHT IT MIGHT BE USEFUL
+    // TO ORDER THESE SOMEHOW
     jw_ui_elements[i].setAttribute('data-jwui-index',i);
+
+    // THIS GETS THE 'COMPUTED' HEIGHT OF THE ELEMENT,
+    // AND SETS IT AS AN INLINE STYLE ON THE ELEMENT,
+    // SO THAT THE SCRIPT & CSS CAN TRANSITION FROM THE COMPUTED HEIGHT TO ZERO HEIGHT (AND BACK AGAIN)
     jw_ui_elements[i].style.height = jw_ui_elements[i].offsetHeight+'px';
-//    console.log('height = ' + jw_ui_elements[i].offsetHeight);
-//    jw_ui_elements[i].addEventListener("click", heightChange); // this works
-    jw_ui_elements[i].previousElementSibling.classList.add('jw_ui_controller'); // this works
+
+    // ADDS A CSS CLASS TO THE PREVIOUS ELEMENT'S SIBLING
+    // THAT AMONG OTHER THINGS, ADDS AN ARROW TO THE LEFT OF THE ELEMENT, TO GIVE IT THAT 'ACCORDION' LOOK
+    jw_ui_elements[i].previousElementSibling.classList.add('jw_ui_controller');
+
+    // ADDS EVENT LISTENER TO THE ELEMENT WITH class='jw_ui_controller'
+    // THE FUNCTION IT TRIGGERS WILL COLLAPSE OR EXPAND THE ELEMENT WITH class = 'jw-ui'
+    jw_ui_elements[i].previousElementSibling.addEventListener("click", collapse_OR_expand);
     
-    jw_ui_elements[i].previousElementSibling.addEventListener("click", dothingstonextSibling); // this works
-    
+    // ADDS A CSS STYLE THAT ADDS AN ARROW TO THE ELEMENT WITH class='jw_ui_controller'
     jw_ui_elements[i].previousElementSibling.insertAdjacentHTML('afterbegin', '<span class="arrow-right"></span>');
     
-    jw_ui_elements[i].addEventListener("click", dothingstoParent);
-    
-//    jw_ui_elements[i].nextElementSibling.firstElementChild.addEventListener('transitionend', 
-//     function( event ) { 
-//         alert( "Finished transition!" ); 
-//     }, false );
-        
-    if(i%2 == 0){
-//        dashedLine();
-//        console.log('jw_ui_elements[' + i + ']');
-//        console.log(jw_ui_elements[i]);
-//        console.log('jw_ui_elements[i].nextElementSibling');
-//        console.log(jw_ui_elements[i].nextElementSibling);
-//        console.log('jw_ui_elements[i].nextElementSibling.firstElementChild');
-//        console.log(jw_ui_elements[i].nextElementSibling.firstElementChild);
-//        console.log('jw_ui_elements[i].firstChild');
-//        console.log(jw_ui_elements[i].firstChild);
-//        console.log('jw_ui_elements[i].firstElementChild');
-//        console.log(jw_ui_elements[i].firstElementChild);
-        jw_ui_elements[i].classList.add('jw_ui_closed');
-    }
+    // THIS SETS ALL JW-UI ELEMENTS TO BE 'CLOSED' ON LOAD
+    jw_ui_elements[i].classList.add('jw_ui_closed');
+
+    // IN CASE YOU WANT THE 2ND, 4TH, ETC ITEMS TO TO BE COLLAPSED ON LOAD
+    // if(i%2 == 0){
+    //     jw_ui_elements[i].classList.add('jw_ui_closed');
+    // }
 }
 
+    // IF YOU USE THE CODE THAT MAKES THE 2ND, 4TH, ETC ITEMS BE COLLAPSED ON LOAD,
+    // THIS FOR LOOP WILL SET THE RIGHT KIND OF ARROW ON THE ELEMENT WITH class='jw_ui_controller'
 for(i=0;i<jw_ui_elements.length;i++){
-//    console.log('jw_ui_elements[' + i + '].previousElementSibling');
-//    console.log(jw_ui_elements[i].previousElementSibling); // these are the things you click on
-//    console.log(jw_ui_elements[i].previousElementSibling.firstChild); // these have the arrow
-//    console.log(jw_ui_elements[0].previousElementSibling.firstChild.attributes); // NamedNodeMap [ class="arrow-right" ]
-    if(jw_ui_elements[i].classList.contains('jw_ui_closed')){
-//        console.log('jw_ui_elements ['+i+'] contains class of jw_ui_closed'); // these ARE the droids you're looking for
-    }
-    // below, it works
-//    if(jw_ui_elements[i].previousElementSibling.firstChild.classList.contains('arrow-right')){
-//        console.log('i found a firstChild with class arrow-right');
-//    }
-    
     if(!jw_ui_elements[i].classList.contains('jw_ui_closed')){
         jw_ui_elements[i].previousElementSibling.firstChild.classList.remove('arrow-right');
         jw_ui_elements[i].previousElementSibling.firstChild.classList.add('arrow-down');
     }
 }
 
-function toggle_display(evt){
-    console.log('toggle_display function triggered');
-//    evt.classList.toggle('display_none'); // undefined
-    console.log(evt.target);
-    evt.target.classList.toggle('display_none');
-}
+    // MAKES THE ARROWS CLICKABLE TOO
+    // for(i=0; i > jw_ui_elements.length; i++){
+    //     jw_ui_elements[i].previousElementSibling.firstElementChild.addEventListener('click',collapse_OR_expand_via_arrow);
+    // }
 
-function heightChange(evt){
-//    console.log('it worked');
-    console.log(evt); // this does work now
-//    console.log(evt.relatedTarget.clientHeight); // null
-//    console.log(evt.relatedTarget); // null
-//    console.log(evt.clientHeight); // undefined
-    console.log(evt.target.clientHeight); // OMFG this works!
-}
+    function collapse_OR_expand_via_arrow(e){
+        // var arrow = e.target.previousElementSibling;
+        // console.log(arrow);
+    }
 
-function dothingstonextSibling(evt){
+// VERSION 1: ONLY AFFECT THE CLICKED ELEMENT. LEAVES ALL OTHERS AS THEY ARE
+// function collapse_OR_expand(evt){
 
-//    evt.target.nextElementSibling.classList.toggle('jw_ui_display_none'); // this works
-    var next_sib = evt.target.nextElementSibling;
-//    var next_sib = evt.target.firstElementChild;  // nope
-    var original_height;
-    original_height = parseInt(next_sib.getAttribute('data-jwui-original-height')); // this works
-//    console.log(original_height);
-//    console.log("original_height.typeof = " + typeof original_height);
-    // console.log(evt.target.childNodes[0]);
-    evt.target.childNodes[0].classList.toggle('arrow-right');
-    evt.target.childNodes[0].classList.toggle('arrow-down');
-    // no matter how small the incrementer, it goes super fast
-//    for(i = 0; i > -original_height; i -= 0.01){
-//        next_sib.firstElementChild.style.top = i+'px';
-//    }
-//    next_sib.firstElementChild.style = "top: -100px";  // doesn't honor transition
-//    next_sib.firstElementChild.addEventListener( 
-//     'transitionend', 
-//     function( event ) { 
-//         alert( "Finished transition!" ); 
-//     }, false );
-//    next_sib.firstElementChild.classList.toggle('jw_ui_closed'); // targets the wrapper
-    next_sib.classList.toggle('jw_ui_closed'); // targets jw_ui
-//    next_sib.classList.toggle('jw_ui_closed'); // nope
-}
+//     var next_sib = evt.target.nextElementSibling;
+//     var original_height;
+//     original_height = parseInt(next_sib.getAttribute('data-jwui-original-height')); // this works
+//     evt.target.childNodes[0].classList.toggle('arrow-right'); // the power of toggle compels you
+//     evt.target.childNodes[0].classList.toggle('arrow-down'); // THE POWER OF TOGGLE COMPELS YOU!
+//     next_sib.classList.toggle('jw_ui_closed'); // targets jw_ui <-- these ARE the droids you're looking for
 
-function test_alert(){
-    alert('Finished!');
-}
+// }
 
-// dothingstoParent was for testing & learning purposes
-function dothingstoParent(evt){
-//    console.log('parentElement = '+ evt.target.parentElement); // must use target.parentElement, not just parentElement
-//    console.log(evt.target.parentElement); // must use target.parentElement, not just parentElement
-//    console.log(evt.target.parentNode);
-//    console.log('here is the previousElementSibling');
-//    console.log(evt.target.previousElementSibling); // previousElementSibling is the one you want; it gives you all the node properties (node properties is my own made up term)
-//    console.log('here is the previousSibling');
-//    console.log(evt.target.previousSibling);  // gives you some of what you want, but its weird
+// VERSION 2: OPENS nextElementSibling OF target (CLICKED ELEMENT) IF IT'S CLOSED. CLOSES ALL OTHERS.
+// VERSION 2: Also makes the arrow next to the element with class jw_ui_controller a clickable trigger
+var trigger_target;
+
+function collapse_OR_expand(evt){
+
+    if(evt.target.nodeName == 'SPAN'){
+        // if user clicks on the arrow next to the element with the class jw_ui_controller
+        trigger_target = evt.target.parentNode.nextElementSibling;
+    } else {
+        // if user clicks on element with the class jw_ui_controller
+        trigger_target = evt.target.nextElementSibling;
+    }
+
+    for(i=0;i<jw_ui_elements.length;i++){
+        // if the target is not closed, close it
+        if(!jw_ui_elements[i].classList.contains('jw_ui_closed')){
+            jw_ui_elements[i].classList.add('jw_ui_closed');
+        }    
+    }
+    // if the target is closed, open it
+    // by removing the class that sets its height to zero
+    if(trigger_target.classList.contains('jw_ui_closed')){
+        trigger_target.classList.remove('jw_ui_closed');
+    }
 }
 
